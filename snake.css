@@ -1,0 +1,260 @@
+:root {
+  --font-family-monospace: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+}
+body {
+  font-family: monospace;
+}
+.container {
+  width: 500px;
+  margin: auto;
+}
+#score-card {
+  height: 100px;
+  width: 500px;
+  font-size: 48px;
+  text-align: right;
+}
+#score {
+  line-height: 100px;
+}
+#game {
+  position: relative;
+  top: 25px;
+  height: 500px;
+  width: 500px;
+}
+#game .border {
+  background-color: #555;
+  width: 24px;
+  height: 24px;
+}
+#game.no-boundary .border {
+  background-color: #ccc;
+}
+#game.paused .target,
+#game.game-over .target,
+#game.paused .snake,
+#game.game-over .snake,
+#game.paused .border,
+#game.game-over .border {
+  opacity: .5;
+}
+#game .overlay {
+  box-sizing: border-box;
+  opacity: 1 !important;
+  position: relative;
+  background-color: #fff;
+  z-index: 10;
+  top: 200px;
+  margin: 0 auto;
+  text-align: center;
+  height: 100px;
+  width: 200px;
+}
+#game .overlay .border {
+  background-color: #333;
+  opacity: 1;
+}
+#game .overlay span {
+  display: inline-block;
+  font-size: 24px;
+}
+#game #game-over-overlay {
+  padding-top: 33px;
+}
+#game-over-overlay span {
+  line-height: 33px;
+}
+.new-game-link {
+  color: blue;
+  cursor: pointer;
+}
+#paused-overlay {
+  line-height: 100px;
+}
+.snake, .target, .border {
+  position: absolute;
+  height: 24px;
+  width: 24px;
+  border-radius: 10%;
+}
+.snake {
+  background-color: #444;
+  z-index: 2;
+  /*border-radius: 25%;*/
+}
+.snake-head {
+  top: 0;
+  left: 0;
+  position: absolute;
+  background: radial-gradient(circle at center, transparent 2px, #111 0);
+}
+/*
+.snake-head.dir-0, 
+.snake-head.dir-3, 
+.snake-tail.dir-2,
+.snake-tail.dir-1 {
+  border-top-left-radius: 33%;
+}
+.snake-head.dir-1,
+.snake-head.dir-0,
+.snake-tail.dir-3,
+.snake-tail.dir-2 {
+  border-top-right-radius: 33%;
+}
+.snake-head.dir-2,
+.snake-head.dir-1,
+.snake-tail.dir-0,
+.snake-tail.dir-3 {
+  border-bottom-right-radius: 33%;
+}
+.snake-head.dir-3,
+.snake-head.dir-2,
+.snake-tail.dir-1,
+.snake-tail.dir-0 {
+  border-bottom-left-radius: 33%;
+}
+*/
+.snake.dir-0 { /* UP */
+}
+.snake.dir-1 { /* RIGHT */
+}
+.snake.dir-2 { /* DOWN*/
+}
+.snake.dir-3 { /* LEFT */
+} 
+.target {
+  background-color: #e00;
+}
+.left-border {
+  left: -25px;
+}
+.right-border {
+  right: -24px;
+}
+.top-border {
+  top: -25px;
+}
+.bottom-border {
+  bottom: -24px;
+}
+.col-0 {
+  left: 0;
+}
+.col-1 {
+  left: 25px;
+}
+.col-2 {
+  left: 50px;
+}
+.col-3 {
+  left: 75px;
+}
+.col-4 {
+  left: 100px;
+}
+.col-5 {
+  left: 125px;
+}
+.col-6 {
+  left: 150px;
+}
+.col-7 {
+  left: 175px;
+}
+.col-8 {
+  left: 200px;
+}
+.col-9 {
+  left: 225px;
+}
+.col-10 {
+  left: 250px;
+}
+.col-11 {
+  left: 275px;
+}
+.col-12 {
+  left: 300px;
+}
+.col-13 {
+  left: 325px;
+}
+.col-14 {
+  left: 350px;
+}
+.col-15 {
+  left: 375px;
+}
+.col-16 {
+  left: 400px;
+}
+.col-17 {
+  left: 425px;
+}
+.col-18 {
+  left: 450px;
+}
+.col-19 {
+  left: 475px;
+}
+.row-0 {
+  top: 0;
+}
+.row-1 {
+  top: 25px;
+}
+.row-2 {
+  top: 50px;
+}
+.row-3 {
+  top: 75px;
+}
+.row-4 {
+  top: 100px;
+}
+.row-5 {
+  top: 125px;
+}
+.row-6 {
+  top: 150px;
+}
+.row-7 {
+  top: 175px;
+}
+.row-8 {
+  top: 200px;
+}
+.row-9 {
+  top: 225px;
+}
+.row-10 {
+  top: 250px;
+}
+.row-11 {
+  top: 275px;
+}
+.row-12 {
+  top: 300px;
+}
+.row-13 {
+  top: 325px;
+}
+.row-14 {
+  top: 350px;
+}
+.row-15 {
+  top: 375px;
+}
+.row-16 {
+  top: 400px;
+}
+.row-17 {
+  top: 425px;
+}
+.row-18 {
+  top: 450px;
+}
+.row-19 {
+  top: 475px;
+}
