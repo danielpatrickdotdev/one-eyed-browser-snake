@@ -166,15 +166,14 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
   const scoreDiv = document.getElementById("score");
   const statusDiv = document.getElementById("status-message");
   let targetElem = null;
-  function reset() {
-    setTimeout(function() {
-      gameDiv.addEventListener("click", pauseHandler);
-    }, 50);
-    gameDiv.classList.remove("game-over");
-    gameDiv.innerHTML = "";
+  function setPauseHandler(handler) {
+    gameDiv.addEventListener("click", pauseHandler);
+  }
+  function drawBorder() {
     gameDiv.appendChild(createBorder(h, w));
   }
-  reset();
+  setPauseHandler(pauseHandler);
+  drawBorder();
 
   function createBorder(h, w) {
     function createBorderDiv(colClass, rowClass) {
@@ -197,6 +196,14 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
     }
 
     return fragment;
+  }
+  function reset() {
+    setTimeout(function() {
+      setPauseHandler(pauseHandler);
+    }, 50);
+    gameDiv.classList.remove("game-over");
+    gameDiv.innerHTML = "";
+    drawBorder();
   }
   function createOverlay(id, text) {
     const textDiv = document.createElement("div");
@@ -323,7 +330,7 @@ function game() {
 
   const target = [-1, -1];
   let speed = 0;
-  let score = 0;
+  let score = 28;
   let extend = false;
   let state = "STOPPED";
 
@@ -460,7 +467,6 @@ function game() {
     speed = 0;
     score = 0;
     extend = false;
-    state = "STOPPED";
     play();
     e.preventDefault();
   }
@@ -475,8 +481,9 @@ function game() {
     start();
   }
 
-  //ui.setPauseHandler(pauseHandler);
-  play(0);
+  //play(0);
+  ui.drawScore(score);
+  ui.setGameOver();
 }
 
 game();
