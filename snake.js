@@ -334,21 +334,22 @@ function game() {
   let extend = false;
   let state = "STOPPED";
 
-  document.addEventListener("keypress", function(e) {
+  document.addEventListener("keydown", function(e) {
     if (state !== "STARTED") {
       return;
     }
+    const key = e.key;
 
-    if (e.key == "ArrowUp") {
+    if (key == "ArrowUp") {
       snake.changeDirection(0);
       e.preventDefault();
-    } else if (e.key == "ArrowRight") {
+    } else if (key == "ArrowRight") {
       snake.changeDirection(1);
       e.preventDefault();
-    } else if (e.key == "ArrowDown") {
+    } else if (key == "ArrowDown") {
       snake.changeDirection(2);
       e.preventDefault();
-    } else if (e.key == "ArrowLeft") {
+    } else if (key == "ArrowLeft") {
       snake.changeDirection(3);
       e.preventDefault();
     }
