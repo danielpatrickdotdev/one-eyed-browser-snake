@@ -56,22 +56,16 @@ body {
   background-color: #333;
   opacity: 1;
 }
-#game .overlay span {
+#game .overlay-text span {
   display: inline-block;
   font-size: 24px;
+  padding: 6px;
+  margin-left: auto;
+  margin-right: auto;
 }
-#game #game-over-overlay {
-  padding-top: 33px;
-}
-#game-over-overlay span {
-  line-height: 33px;
-}
-.new-game-link {
+.new-game-link span {
   color: blue;
   cursor: pointer;
-}
-#paused-overlay {
-  line-height: 100px;
 }
 .snake, .target, .border {
   position: absolute;

@@ -131,19 +131,20 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
 
     return fragment;
   }
-  function createOverlay(id) {
+  function createOverlay(id, text) {
+    const textDiv = document.createElement("div");
+    textDiv.innerHTML = `<span>${text}</span>`;
+    textDiv.classList.add("overlay-text");
+
     const div = document.createElement("div");
     div.id = id;
     div.classList.add("overlay");
     div.appendChild(createBorder(4, 8));
+    div.appendChild(textDiv);
     return div;
   }
   function setPaused() {
-    const span = document.createElement("span");
-    span.innerHTML = "PAUSED";
-
-    const pausedDiv = createOverlay("paused-overlay");
-    pausedDiv.appendChild(span);
+    const pausedDiv = createOverlay("paused-overlay", "PAUSED");
 
     gameDiv.classList.add("paused");
     gameDiv.appendChild(pausedDiv);
@@ -153,17 +154,15 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
     gameDiv.removeChild(document.getElementById("paused-overlay"));
   }
   function setGameOver() {
-    const gameOverSpan = document.createElement("span");
-    gameOverSpan.innerHTML = "GAME OVER";
-
-    const newGameLink = document.createElement("span");
-    newGameLink.classList.add("new-game-link");
-    newGameLink.innerHTML = "NEW GAME?";
+    const newGameLink = document.createElement("div");
+    newGameLink.classList.add("overlay-text", "new-game-link");
+    newGameLink.innerHTML = "<span>NEW GAME?</span>";
     newGameLink.addEventListener("click", newGameHandler);
 
-    const gameOverDiv = createOverlay("game-over-overlay");
-    gameOverDiv.appendChild(gameOverSpan);
-    gameOverDiv.appendChild(newGameLink);
+    const gameOverDiv = createOverlay("game-over-overlay", "GAME OVER");
+    setTimeout(function() {
+      gameOverDiv.appendChild(newGameLink);
+    }, 1000);
 
     gameDiv.classList.add("game-over");
     gameDiv.removeEventListener("click", pauseHandler);
