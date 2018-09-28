@@ -22,7 +22,6 @@ const statusCodes = [
   {code: 306, message: "Switch Proxy"},
   {code: 307, message: "Temporary Redirect"},
   {code: 308, message: "Permanent Redirect"},
-  {code: 404, message: "error on Wikipedia "},
   {code: 400, message: "Bad Request"},
   {code: 401, message: "Unauthorized"},
   {code: 402, message: "Payment Required"},
