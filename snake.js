@@ -63,6 +63,57 @@ const statusCodes = [
   {code: 511, message: "Network Authentication Required"}
 ];
 
+function construct404Snake() {
+  const snake404 = [
+    [0, 0], [1, 0], [0, 1], [0, 1], [1, 0], [1, 0],
+    [1, 0], [1, 0], [0, 1], [1, 0], [1, 0], [1, 0],
+    [1, 0], [0, -1], [0, -1], [0, -1], [0, -1], [1, 0],
+    [1, 0], [1, 0], [1, 0], [0, -1], [0, -1], [1, 0],
+    [0, 1], [0, 1], [0, 1], [0, 1], [1, 0], [1, 0]
+  ];
+
+  let c, r;
+  let dir = Math.floor(Math.random() * 4);
+  let reversed = Math.random() >= 0.5;
+  function randomEdgePoint() {
+      return Math.floor(Math.random() * 14) + 3;
+  }
+
+  switch (dir) {
+    case 0: // top
+      vertical = true;
+      c = randomEdgePoint();
+      r = 0;
+      break;
+    case 1: // right
+      c = 19;
+      r = randomEdgePoint();
+      break;
+    case 2: // bottom
+      vertical = true;
+      c = randomEdgePoint();
+      r = 19;
+      break;
+    default: // left
+      c = 0;
+      r = randomEdgePoint();
+  }
+  return snake404.map(function([col, row]) {
+    if (reversed) {
+      row = -row;
+    }
+    if (dir === 2 || dir === 1) {
+      col = -col;
+    }
+    if (dir === 0 || dir === 2) {
+      [col, row] = [row, col];
+    }
+    c += col;
+    r += row;
+    return [c, r];
+  });
+}
+
 function createSnake(spec={}) {
   const {d=0, c=9, r=9, ncols=20, nrows=20, n=3} = spec;
   let {hardBorder=false} = spec;
@@ -505,6 +556,12 @@ function game() {
   }
 
   //play(0);
+  const snake404 = construct404Snake();
+  const target404 = [0, 19].includes(snake404[0][0]) ?
+                    [snake404[0][0], snake404[2][1]] :
+                    [snake404[2][0], snake404[0][1]];
+  ui.drawSnake(snake404, 0);
+  ui.drawTarget(target404);
   ui.drawScore(score);
   ui.setGameOver();
 }
