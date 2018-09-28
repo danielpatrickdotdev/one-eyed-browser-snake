@@ -4,6 +4,7 @@
 }
 body {
   font-family: led-font;
+  background-color: #333;
 }
 .container {
   width: 500px;
@@ -14,6 +15,7 @@ body {
   font-size: 48px;
   padding-top: 24px;
   padding-bottom: 24px;
+  color: #fff;
 }
 #score {
   width: 100px;
@@ -27,16 +29,19 @@ body {
 #game {
   position: relative;
   top: 25px;
-  height: 500px;
-  width: 500px;
+  height: 499px;
+  width: 499px;
+  background-color: #fff;
+  border-bottom: 1px solid #333;
+  border-right: 1px solid #333;
 }
 #game .border {
-  background-color: #555;
+  background-color: #ddd;
   width: 24px;
   height: 24px;
 }
 #game.no-boundary .border {
-  background-color: #ccc;
+  background-color: #444;
 }
 #game.paused .target,
 #game.game-over .target,
@@ -132,13 +137,13 @@ body {
   left: -25px;
 }
 .right-border {
-  right: -24px;
+  right: -25px;
 }
 .top-border {
   top: -25px;
 }
 .bottom-border {
-  bottom: -24px;
+  bottom: -25px;
 }
 .col-0 {
   left: 0;
