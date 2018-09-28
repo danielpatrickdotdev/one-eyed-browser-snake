@@ -3,10 +3,10 @@
   src: url('digital-7.mono.ttf');
 }
 body {
-  font-family: led-font;
   background-color: #333;
 }
 .container {
+  font-family: led-font;
   width: 500px;
   margin: auto;
 }
