@@ -36,20 +36,18 @@ body {
   border-right: 1px solid #333;
 }
 #game .border {
-  background-color: #ddd;
+  background-color: #999;
   width: 24px;
   height: 24px;
 }
 #game.no-boundary .border {
-  background-color: #444;
+  background-color: none;
 }
 #game.paused .target,
 #game.game-over .target,
 #game.paused .snake,
-#game.game-over .snake,
-#game.paused .border,
-#game.game-over .border {
-  opacity: .5;
+#game.game-over .snake {
+  opacity: .3;
 }
 #game .overlay {
   box-sizing: border-box;
