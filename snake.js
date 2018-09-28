@@ -386,7 +386,6 @@ function game() {
     state = "STARTED";
     const speedFraction = (50 - speed) / 50;
     const interval = 50 + Math.floor(speedFraction ** 2 * 250);
-    console.log(interval);
     timerId = setInterval(function() {
       move();
     }, interval);
