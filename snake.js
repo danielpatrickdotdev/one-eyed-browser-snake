@@ -329,7 +329,7 @@ function game() {
 
   const target = [-1, -1];
   let speed = 0;
-  let score = 28;
+  let score = getScoreFromHTML();
   let extend = false;
   let state = "STOPPED";
 
@@ -468,6 +468,20 @@ function game() {
         });
       });
     }
+  }
+  function getScoreFromHTML() {
+    const scoreDiv = document.getElementById("score");
+    const scoreCode = parseInt(scoreDiv.innerHTML);
+    if (isNaN(scoreCode)) {
+      return 0;
+    }
+    const score = statusCodes.findIndex(function(statusCode) {
+      return statusCode.code === scoreCode;
+    });
+    if (score === -1) {
+      return 0;
+    }
+    return score;
   }
 
   function newGameHandler(e) {
