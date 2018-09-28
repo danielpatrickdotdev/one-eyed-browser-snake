@@ -335,21 +335,28 @@ function game() {
   let state = "STOPPED";
 
   document.addEventListener("keydown", function(e) {
-    if (state !== "STARTED") {
-      return;
-    }
     const key = e.key;
 
-    if (key == "ArrowUp") {
+    if ((state === "STARTED" || state === "PAUSED") && key === " ") {
+      // Handle spacebar => pause
+      togglePaused();
+      e.preventDefault();
+    } else if (state !== "STARTED") {
+      // All other keypresses only work if game in progress
+      return;
+    }
+
+    if (key == "Space") {
+    } else if (key === "ArrowUp") {
       snake.changeDirection(0);
       e.preventDefault();
-    } else if (key == "ArrowRight") {
+    } else if (key === "ArrowRight") {
       snake.changeDirection(1);
       e.preventDefault();
-    } else if (key == "ArrowDown") {
+    } else if (key === "ArrowDown") {
       snake.changeDirection(2);
       e.preventDefault();
-    } else if (key == "ArrowLeft") {
+    } else if (key === "ArrowLeft") {
       snake.changeDirection(3);
       e.preventDefault();
     }
@@ -373,7 +380,7 @@ function game() {
     state = "PAUSED";
     stopTimer();
   }
-  function pauseHandler(e) {
+  function togglePaused() {
     if (state === "STARTED") {
       ui.setPaused();
       pause();
@@ -381,6 +388,9 @@ function game() {
       ui.unsetPaused();
       start(speed);
     }
+  }
+  function pauseHandler(e) {
+    togglePaused();
     e.preventDefault();
   }
   function start() {
