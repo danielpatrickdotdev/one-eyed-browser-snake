@@ -101,25 +101,25 @@ body {
 .snake-head.dir-3, 
 .snake-tail.dir-2,
 .snake-tail.dir-1 {
-  border-top-left-radius: 33%;
+  border-top-left-radius: 40%;
 }
 .snake-head.dir-1,
 .snake-head.dir-0,
 .snake-tail.dir-3,
 .snake-tail.dir-2 {
-  border-top-right-radius: 33%;
+  border-top-right-radius: 40%;
 }
 .snake-head.dir-2,
 .snake-head.dir-1,
 .snake-tail.dir-0,
 .snake-tail.dir-3 {
-  border-bottom-right-radius: 33%;
+  border-bottom-right-radius: 40%;
 }
 .snake-head.dir-3,
 .snake-head.dir-2,
 .snake-tail.dir-1,
 .snake-tail.dir-0 {
-  border-bottom-left-radius: 33%;
+  border-bottom-left-radius: 40%;
 }
 
 .snake.dir-0 { /* UP */
