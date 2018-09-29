@@ -63,20 +63,28 @@ const statusCodes = [
   {code: 511, message: "Network Authentication Required"}
 ];
 
-function construct404Snake() {
-  const snake404 = [
+function constructInitialSnake(length) {
+  const snake511 = [
     [0, 0], [1, 0], [0, 1], [0, 1], [1, 0], [1, 0],
-    [1, 0], [1, 0], [0, 1], [1, 0], [1, 0], [1, 0],
-    [1, 0], [0, -1], [0, -1], [0, -1], [0, -1], [1, 0],
-    [1, 0], [1, 0], [1, 0], [0, -1], [0, -1], [1, 0],
-    [0, 1], [0, 1], [0, 1], [0, 1], [1, 0], [1, 0]
+    [1, 0], [0, -1], [-1, 0], [0, -1], [0, -1], [1, 0],
+    [1, 0], [1, 0], [0, 1], [0, 1], [0, 1], [0, 1],
+    [0, 1], [1, 0], [1, 0], [1, 0], [1, 0], [0, -1],
+    [0, -1], [-1, 0], [-1, 0], [-1, 0], [0, -1], [0, -1],
+    [0, -1], [0, -1], [0, -1], [1, 0], [1, 0], [0, 1],
+    [0, 1], [1, 0], [1, 0], [0, -1], [0, -1], [1, 0],
+    [0, 1], [0, 1], [0, 1], [0, 1], [1, 0], [1, 0],
+    [0, 1], [0, 1], [1, 0], [1, 0], [0, -1], [0, -1],
+    [0, -1], [0, -1], [-1, 0], [-1, 0], [0, -1], [1, 0],
+    [0, -1], [0, -1], [1, 0], [1, 0], [0, 1]
   ];
+  console.log(snake511.length);
+  console.log(statusCodes.length + 3);
 
   let c, r;
-  let dir = Math.floor(Math.random() * 4);
+  let dir = Math.floor(Math.random() * 4); // 0 to 3
   let reversed = Math.random() >= 0.5;
   function randomEdgePoint() {
-      return Math.floor(Math.random() * 14) + 3;
+    return Math.floor(Math.random() * 12) + 4; // 4 to 15
   }
 
   switch (dir) {
@@ -98,7 +106,7 @@ function construct404Snake() {
       c = 0;
       r = randomEdgePoint();
   }
-  return snake404.map(function([col, row]) {
+  return snake511.slice(0, length).map(function([col, row]) {
     if (reversed) {
       row = -row;
     }
@@ -556,12 +564,12 @@ function game() {
   }
 
   //play(0);
-  const snake404 = construct404Snake();
-  const target404 = [0, 19].includes(snake404[0][0]) ?
-                    [snake404[0][0], snake404[2][1]] :
-                    [snake404[2][0], snake404[0][1]];
-  ui.drawSnake(snake404, 0);
-  ui.drawTarget(target404);
+  const snakePositions = constructInitialSnake(score + 3);
+  const targetPos = [0, 19].includes(snakePositions[0][0]) ?
+                    [snakePositions[0][0], snakePositions[2][1]] :
+                    [snakePositions[2][0], snakePositions[0][1]];
+  ui.drawSnake(snakePositions, 0);
+  ui.drawTarget(targetPos);
   ui.drawScore(score);
   ui.setGameOver();
 }
