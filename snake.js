@@ -115,21 +115,21 @@ function constructInitialSnake(length) {
         LEFT = Directions.LEFT;
 
   const snake511 = [
-    [1, 0], [1, 0], [0, 1], [0, 1], [1, 0], [1, 0],
-    [1, 0], [0, -1], [-1, 0], [0, -1], [0, -1], [1, 0],
-    [1, 0], [1, 0], [0, 1], [0, 1], [0, 1], [0, 1],
-    [0, 1], [1, 0], [1, 0], [1, 0], [1, 0], [0, -1],
-    [0, -1], [-1, 0], [-1, 0], [-1, 0], [0, -1], [0, -1],
-    [0, -1], [0, -1], [0, -1], [1, 0], [1, 0], [0, 1],
-    [0, 1], [1, 0], [1, 0], [0, -1], [0, -1], [1, 0],
-    [0, 1], [0, 1], [0, 1], [0, 1], [1, 0], [1, 0],
-    [0, 1], [0, 1], [1, 0], [1, 0], [0, -1], [0, -1],
-    [0, -1], [0, -1], [-1, 0], [-1, 0], [0, -1], [1, 0],
-    [0, -1], [0, -1], [1, 0], [1, 0]
+    UP, UP, RIGHT, RIGHT, UP, UP,
+    UP, LEFT, DOWN, LEFT, LEFT, LEFT,
+    LEFT, LEFT, UP, UP, UP, RIGHT,
+    RIGHT, RIGHT, RIGHT, RIGHT, RIGHT, RIGHT,
+    RIGHT, UP, UP, UP, LEFT, LEFT,
+    DOWN, DOWN, LEFT, LEFT, LEFT, LEFT,
+    LEFT, UP, UP, RIGHT, RIGHT, UP,
+    UP, LEFT, LEFT, UP, RIGHT, RIGHT,
+    RIGHT, RIGHT, UP, UP, RIGHT, RIGHT,
+    UP, UP, LEFT, LEFT, LEFT, LEFT,
+    DOWN, DOWN, LEFT, UP
   ];
 
   let c, r;
-  let vertical = false,
+  let horizontal = false,
       reverse = false;
   const edge = Math.floor(Math.random() * 4); // 0 to 3 = top, right, bottom & left
   const flip = Math.random() >= 0.5; // make row negative
@@ -140,38 +140,40 @@ function constructInitialSnake(length) {
 
   switch (edge) {
     case 0: // top
-      vertical = true; // swap col and row
       c = randomEdgePoint();
       r = -1;
       break;
     case 1: // right
+      horizontal = true; // swap col and row
       reverse = true; // make col negative
       c = 20;
       r = randomEdgePoint();
       break;
     case 2: // bottom
       reverse = true; // make col negative
-      vertical = true; // swap col and row
       c = randomEdgePoint();
       r = 20;
       break;
     default: // left
+      horizontal = true; // swap col and row
       c = -1;
       r = randomEdgePoint();
   }
-  return snake511.slice(0, length).map(function([col, row]) {
+  return snake511.slice(0, length).map(function(dir) {
+    let [dx, dy] = dir;
+
     if (flip) {
-      row = -row;
+      dx = -dx;
     }
     if (reverse) {
-      col = -col;
+      dy = -dy;
     }
-    if (vertical) {
-      [col, row] = [row, col]; // swap col and row
+    if (horizontal) {
+      [dx, dy] = [dy, dx]; // swap col and row
     }
-    c += col;
-    r += row;
-    return [c, r, Directions.opposite(Directions.getDirNum([col, row]))];
+    c -= dx;
+    r -= dy;
+    return [c, r, Directions.getDirNum([dx, dy])];
   });
 }
 
