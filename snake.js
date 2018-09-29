@@ -171,8 +171,6 @@ function constructInitialSnake(length) {
     }
     c += col;
     r += row;
-    console.log("DIR: " + [col, row]);
-    console.log("OPP: " + Directions.opposite(Directions.getDirNum([col, row])));
     return [c, r, Directions.opposite(Directions.getDirNum([col, row]))];
   });
 }
@@ -385,7 +383,6 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
       gameDiv.appendChild(elem);
       if (remove) {
         [col, row,] = remove;
-        console.log("REMOVE: " + col + ", " + row);
         const elem = gameDiv.querySelector(`.snake.col-${col}.row-${row}`);
         gameDiv.removeChild(elem);
 
