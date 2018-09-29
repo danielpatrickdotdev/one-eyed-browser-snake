@@ -1,3 +1,48 @@
+const Directions = (function() {
+  const UP = [0, -1],
+        RIGHT = [1, 0],
+        DOWN = [0, 1],
+        LEFT = [-1, 0];
+
+  const directions = [UP, RIGHT, DOWN, LEFT];
+
+  function next(dirNum) {
+    return (dirNum + 1) % 4;
+  }
+  function prev(dirNum) {
+    return (dirNum + 3) % 4;
+  }
+  function opposite(dirNum) {
+    return (dirNum + 2) % 4;
+  }
+  function getDirNum(dir) {
+    const [c, r] = dir;
+
+    if (c === 0 && r === -1) {
+      return 0;
+    } else if (c === 1 && r === 0) {
+      return 1;
+    } else if (c === 0 && r === 1) {
+      return 2;
+    } else if (c === -1 && r === 0) {
+      return 3;
+    }
+    throw new Error("Invalid direction: " + dir);
+  }
+  function get(n) {
+    return directions[n].slice();
+  }
+
+  return Object.freeze({
+    UP, RIGHT, DOWN, LEFT,
+    get,
+    next,
+    prev,
+    opposite,
+    getDirNum
+  });
+})();
+
 const statusCodes = [
   {code: 100, message: "Continue"},
   {code: 101, message: "Switching Protocols"},
@@ -64,8 +109,13 @@ const statusCodes = [
 ];
 
 function constructInitialSnake(length) {
+  const UP = Directions.UP,
+        RIGHT = Directions.RIGHT,
+        DOWN = Directions.DOWN,
+        LEFT = Directions.LEFT;
+
   const snake511 = [
-    [0, 0], [1, 0], [0, 1], [0, 1], [1, 0], [1, 0],
+    [1, 0], [1, 0], [0, 1], [0, 1], [1, 0], [1, 0],
     [1, 0], [0, -1], [-1, 0], [0, -1], [0, -1], [1, 0],
     [1, 0], [1, 0], [0, 1], [0, 1], [0, 1], [0, 1],
     [0, 1], [1, 0], [1, 0], [1, 0], [1, 0], [0, -1],
@@ -77,48 +127,53 @@ function constructInitialSnake(length) {
     [0, -1], [0, -1], [-1, 0], [-1, 0], [0, -1], [1, 0],
     [0, -1], [0, -1], [1, 0], [1, 0], [0, 1]
   ];
-  console.log(snake511.length);
-  console.log(statusCodes.length + 3);
 
   let c, r;
-  let dir = Math.floor(Math.random() * 4); // 0 to 3
-  let reversed = Math.random() >= 0.5;
+  let vertical = false,
+      reverse = false;
+  const edge = Math.floor(Math.random() * 4); // 0 to 3 = top, right, bottom & left
+  const flip = Math.random() >= 0.5; // make row negative
+
   function randomEdgePoint() {
     return Math.floor(Math.random() * 12) + 4; // 4 to 15
   }
 
-  switch (dir) {
+  switch (edge) {
     case 0: // top
-      vertical = true;
+      vertical = true; // swap col and row
       c = randomEdgePoint();
-      r = 0;
+      r = -1;
       break;
     case 1: // right
-      c = 19;
+      reverse = true; // make col negative
+      c = 20;
       r = randomEdgePoint();
       break;
     case 2: // bottom
-      vertical = true;
+      reverse = true; // make col negative
+      vertical = true; // swap col and row
       c = randomEdgePoint();
-      r = 19;
+      r = 20;
       break;
     default: // left
-      c = 0;
+      c = -1;
       r = randomEdgePoint();
   }
   return snake511.slice(0, length).map(function([col, row]) {
-    if (reversed) {
+    if (flip) {
       row = -row;
     }
-    if (dir === 2 || dir === 1) {
+    if (reverse) {
       col = -col;
     }
-    if (dir === 0 || dir === 2) {
-      [col, row] = [row, col];
+    if (vertical) {
+      [col, row] = [row, col]; // swap col and row
     }
     c += col;
     r += row;
-    return [c, r];
+    console.log("DIR: " + [col, row]);
+    console.log("OPP: " + Directions.opposite(Directions.getDirNum([col, row])));
+    return [c, r, Directions.opposite(Directions.getDirNum([col, row]))];
   });
 }
 
@@ -127,27 +182,27 @@ function createSnake(spec={}) {
   let {hardBorder=false} = spec;
   const snakeArray = [];
 
-  const directions = [[0, -1], [1, 0], [0, 1], [-1, 0]]; // up, right, down, left
-  let direction = directions[d];
-  let nextMoveDirection = direction;
+  let direction = d;
+  let nextMoveDirection = d;
 
   function createParts(c, r) {
-    snakeArray.push([c, r]);
+    snakeArray.push([c, r, direction]);
     for (let i = 1; i < n; i++) {
       [c, r] = rtranslate([c, r], direction);
-      snakeArray.push([c, r]);
+      snakeArray.push([c, r, direction]);
     }
   }
   function reset() {
     snakeArray.length = 0;
-    direction = directions[d];
+    direction = d;
     nextMoveDirection = direction;
     createParts(c, r);
   }
 
   function translate([c, r], dir) {
-    c += dir[0];
-    r += dir[1]; 
+    const [dx, dy] = Directions.get(dir);
+    c += dx;
+    r += dy;
     if (!hardBorder) {
       c = (c + ncols) % ncols;
       r = (r + nrows) % nrows;
@@ -155,7 +210,7 @@ function createSnake(spec={}) {
     return [c, r]
   }
   function oppositeDirection(dir) {
-    return directions[(directions.indexOf(dir) + 2) % 4];
+    return Directions.opposite(dir);
   }
   function rtranslate(pos, dir) {
     rdir = oppositeDirection(dir);
@@ -168,16 +223,15 @@ function createSnake(spec={}) {
      * 2 = DOWN
      * 3 = LEFT
      */
-    return directions.indexOf(direction);
+    return direction;
   }
-  function changeDirection(n) {
+  function changeDirection(newDirection) {
     /*
      * 0 = UP
      * 1 = RIGHT
      * 2 = DOWN
      * 3 = LEFT
      */
-    newDirection = directions[n];
     if (newDirection != oppositeDirection(direction)) {
       nextMoveDirection = newDirection;
     }
@@ -189,7 +243,7 @@ function createSnake(spec={}) {
     snakeArray.splice(1, 0, pos);
 
     newPos = translate(pos, direction);
-    snakeArray[0] = newPos.slice();
+    snakeArray[0] = [...newPos.slice(), direction];
 
     if (!extend) {
       return snakeArray.pop();
@@ -312,31 +366,36 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
 
     return elem;
   }
-  function drawSnake(positions, dir) {
+  function drawSnake(positions) {
     for (let i = 0; i < positions.length; i++) {
       const pos = positions[i];
       const head = i === 0;
       const tail = i === (positions.length - 1);
-      const elem = createSnakePart(...pos, dir, head, tail);
+      const elem = createSnakePart(...pos, head, tail);
       gameDiv.appendChild(elem);
     };
   }
-  function updateSnake(positions, dir, remove) {
+  function updateSnake(positions, remove) {
     if (positions.length > 0) {
       const headElem = gameDiv.querySelector(".snake-head");
       headElem.classList.remove("snake-head");
 
-      const [col, row] = positions[0];
+      let [col, row, dir] = positions[0];
       const elem = createSnakePart(col, row, dir, true);
       gameDiv.appendChild(elem);
       if (remove) {
-        let [col, row] = remove;
+        [col, row,] = remove;
+        console.log("REMOVE: " + col + ", " + row);
         const elem = gameDiv.querySelector(`.snake.col-${col}.row-${row}`);
         gameDiv.removeChild(elem);
 
-        [col, row] = positions.slice(-1)[0];
+        [col, row,] = positions.slice(-1)[0];
+        const [prevCol, prevRow,] = positions.slice(-2)[0];
+        dir = Directions.getDirNum([prevCol - col, prevRow - row]);
         const newTailElem = gameDiv.querySelector(`.snake.col-${col}.row-${row}`);
         newTailElem.classList.add("snake-tail");
+        newTailElem.classList.remove("dir-0", "dir-1", "dir-2", "dir-3", "dir-4");
+        newTailElem.classList.add(`dir-${dir}`);
       }
     }
   }
@@ -491,7 +550,7 @@ function game() {
       setTarget(snake.getPositions());
       ui.drawTarget(target);
     }
-    ui.updateSnake(snake.getPositions(), snake.getDirection(), toRemove);
+    ui.updateSnake(snake.getPositions(), toRemove);
   }
   function checkForCollisions(positions) {
     if (positions.length == 0) {
@@ -553,22 +612,23 @@ function game() {
     e.preventDefault();
   }
   function play() {
-    snakePositions = snake.getPositions();
+    const snakePositions = snake.getPositions();
     setTarget(snakePositions);
 
     ui.drawScore(score);
     ui.drawTarget(target);
-    ui.drawSnake(snakePositions, snake.getDirection());
+    ui.drawSnake(snakePositions);
 
     start();
   }
 
   //play(0);
   const snakePositions = constructInitialSnake(score + 3);
+  // Place target next to head of snake
   const targetPos = [0, 19].includes(snakePositions[0][0]) ?
                     [snakePositions[0][0], snakePositions[2][1]] :
                     [snakePositions[2][0], snakePositions[0][1]];
-  ui.drawSnake(snakePositions, 0);
+  ui.drawSnake(snakePositions);
   ui.drawTarget(targetPos);
   ui.drawScore(score);
   ui.setGameOver();
