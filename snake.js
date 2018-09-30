@@ -151,19 +151,29 @@ const statusCodes = [
   {code: 511, message: "Network Authentication Required"}
 ];
 
+/**
+ * Create a dummy snake Array intended for display purposes only.
+ * @param {number} length - integer between 0 and 64
+ */
 function constructInitialSnake(length) {
   const UP = Directions.UP,
         RIGHT = Directions.RIGHT,
         DOWN = Directions.DOWN,
         LEFT = Directions.LEFT;
 
+  /**
+   * snake55 represents the arbitrary orientations of a snake with length 64,
+   * which is the length it would be at score = 61, i.e. when score displays as
+   * status code 511.
+   *
+   * The snake is represented by an Array of directions UP, RIGHT, DOWN and
+   * LEFT, which refer to orientation of each snake part - i.e. head is facing
+   * UPwards by default.
+   *
+   * As positions of parts are calculated head to tail, each part'sdirection
+   * will need to be reversed in order to calculate the next part's position.
+   */
   const snake511 = [
-    /*
-     * Direction refers to orientation of snake part - i.e. head is facing
-     * upwards by default.
-     * As positions of parts are calculated head to tail, the direction will
-     * need to be reversed in order to calculate the next part's position.
-     */
     UP, UP, RIGHT, RIGHT, UP, UP,
     UP, LEFT, DOWN, LEFT, LEFT, LEFT,
     LEFT, LEFT, UP, UP, UP, RIGHT,
@@ -177,17 +187,27 @@ function constructInitialSnake(length) {
     DOWN, DOWN, LEFT, UP
   ];
 
-  let c, r; // Starting x, y position
-  let horizontal = false, // Vertical orientation by default
-      reverse = false; // Directions positive by default - i.e. downwards (rightwards is also positive)
-  const edge = Math.floor(Math.random() * 4); // 0 to 3 = top, right, bottom & left
+  // Starting x, y position
+  let c, r;
+  // Vertical orientation by default
+  let horizontal = false;
+  // Directions positive by default - i.e. head at top or left
+  let reverse = false;
+
+  // edge is a number between 0 and 3 inclusive - top, right, bottom or left
+  const edge = Math.floor(Math.random() * 4);
+  // flip, boolean, determines whether we'll use + or - dy
   const flip = Math.random() >= 0.5; // make row negative
 
+  /**
+   * randomEdgePoint returns a random number between 4 and 15, which represents
+   * a point along a 20-sided square at which the snake's head can be placed.
+   */
   function randomEdgePoint() {
-    return Math.floor(Math.random() * 12) + 4; // 4 to 15
+    return Math.floor(Math.random() * 12) + 4;
   }
 
-  /*
+  /**
    * Pick a random point on the boundary to place the snake's head
    * and assign the other coordinate as -1 or 20 (just outside the boundary,
    * because our first move in snake511 will place us at 1 or 19).
