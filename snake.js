@@ -63,7 +63,7 @@ const Directions = (function() {
     throw new Error("Invalid direction: " + dir);
   }
   /**
-   * Returns the direction UP, RIGHT, DOWN or LEFT of the given dirNum.
+   * Returns the direction (UP, RIGHT, DOWN or LEFT) of the given dirNum
    * @param {dirNum} dirNum
    */
   function get(n) {
