@@ -1,4 +1,13 @@
+/*
+ * The definition of directions, intended to reduce the amount that other
+ * parts of the system have to deal with this logic.
+ */
 const Directions = (function() {
+ /*
+  * UP, DOWN, LEFT and RIGHT represent the cartesian coordinate that would need
+  * to be added to another cartesian coordinate, A, in order to produce a new
+  * coordinate, B, where B is positioned one unit away in that direction from A.
+  */
   const UP = [0, -1],
         RIGHT = [1, 0],
         DOWN = [0, 1],
@@ -6,18 +15,23 @@ const Directions = (function() {
 
   const directions = [UP, RIGHT, DOWN, LEFT];
 
+  // Returns the dirNum of the direction to the right of given dirNum
   function next(dirNum) {
     return (dirNum + 1) % 4;
   }
+  // Returns the dirNum of the direction to the left of given dirNum
   function prev(dirNum) {
     return (dirNum + 3) % 4;
   }
+  // Returns the dirNum of the direction opposite the given dirNum
   function opposite(dirNum) {
     return (dirNum + 2) % 4;
   }
+  // Returns the dirNum given one of UP, RIGHT, DOWN or LEFT
   function getDirNum(dir) {
     const [c, r] = dir;
 
+    // We can't compare Arrays so this ugliness will do for now
     if (c === 0 && r === -1) {
       return 0;
     } else if (c === 1 && r === 0) {
@@ -29,6 +43,7 @@ const Directions = (function() {
     }
     throw new Error("Invalid direction: " + dir);
   }
+  // Returns UP, RIGHT, DOWN or LEFT given a number from 0 to 3 inclusive
   function get(n) {
     return directions[n].slice();
   }
@@ -43,6 +58,12 @@ const Directions = (function() {
   });
 })();
 
+/*
+ * Scoring system is based on standard HTTP status codes.
+ * The score at the start of a new game (i.e. zero) is status 100.
+ * As we have a finite list of codes, we'll have to cycle back through this
+ * in the unlikely event that someone gets to status 511).
+ */
 const statusCodes = [
   {code: 100, message: "Continue"},
   {code: 101, message: "Switching Protocols"},
@@ -115,6 +136,12 @@ function constructInitialSnake(length) {
         LEFT = Directions.LEFT;
 
   const snake511 = [
+    /*
+     * Direction refers to orientation of snake part - i.e. head is facing
+     * upwards by default.
+     * As positions of parts are calculated head to tail, the direction will
+     * need to be reversed in order to calculate the next part's position.
+     */
     UP, UP, RIGHT, RIGHT, UP, UP,
     UP, LEFT, DOWN, LEFT, LEFT, LEFT,
     LEFT, LEFT, UP, UP, UP, RIGHT,
@@ -128,9 +155,9 @@ function constructInitialSnake(length) {
     DOWN, DOWN, LEFT, UP
   ];
 
-  let c, r;
-  let horizontal = false,
-      reverse = false;
+  let c, r; // Starting x, y position
+  let horizontal = false, // Vertical orientation by default
+      reverse = false; // Directions positive by default - i.e. downwards (rightwards is also positive)
   const edge = Math.floor(Math.random() * 4); // 0 to 3 = top, right, bottom & left
   const flip = Math.random() >= 0.5; // make row negative
 
@@ -138,6 +165,11 @@ function constructInitialSnake(length) {
     return Math.floor(Math.random() * 12) + 4; // 4 to 15
   }
 
+  /*
+   * Pick a random point on the boundary to place the snake's head
+   * and assign the other coordinate as -1 or 20 (just outside the boundary,
+   * because our first move in snake511 will place us at 1 or 19).
+   */
   switch (edge) {
     case 0: // top
       c = randomEdgePoint();
@@ -159,20 +191,29 @@ function constructInitialSnake(length) {
       c = -1;
       r = randomEdgePoint();
   }
+  // Slice snake to the given length (intended to be an index of statusCodes + 3)
   return snake511.slice(0, length).map(function(dir) {
+    // dir is one of UP, RIGHT, DOWN or LEFT
     let [dx, dy] = dir;
 
     if (flip) {
+    // Randomly (50%) reverse the snake's shape perpendicular to the border
       dx = -dx;
     }
     if (reverse) {
+    // If we're starting from bottom or right, we need to deduct rather than
+    // add to the coordinate
       dy = -dy;
     }
     if (horizontal) {
-      [dx, dy] = [dy, dx]; // swap col and row
+      // Rotate the directions by swapping col and row
+      [dx, dy] = [dy, dx];
     }
+    // Deduct dx and dy because they represent the orientation of the snake part
+    // rather than the direction the next piece is in
     c -= dx;
     r -= dy;
+    // Return the snake part position plus its orientation as an int (0 to 3)
     return [c, r, Directions.getDirNum([dx, dy])];
   });
 }
