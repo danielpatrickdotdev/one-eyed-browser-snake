@@ -1,9 +1,9 @@
-/*
+/**
  * The definition of directions, intended to reduce the amount that other
  * parts of the system have to deal with this logic.
  */
 const Directions = (function() {
- /*
+ /**
   * UP, DOWN, LEFT and RIGHT represent the cartesian coordinate that would need
   * to be added to another cartesian coordinate, A, in order to produce a new
   * coordinate, B, where B is positioned one unit away in that direction from A.
@@ -13,21 +13,40 @@ const Directions = (function() {
         DOWN = [0, 1],
         LEFT = [-1, 0];
 
+  /**
+   * @typedef {number} dirNum - integer from 0 to 3 where:
+   *   0 = UP
+   *   1 = RIGHT
+   *   2 = DOWN
+   *   3 = LEFT
+   */
   const directions = [UP, RIGHT, DOWN, LEFT];
 
-  // Returns the dirNum of the direction to the right of given dirNum
+  /**
+   * Returns the dirNum of the given dirNum rotated 90 degrees to the right.
+   * @param {dirNum} dirNum
+   */
   function next(dirNum) {
     return (dirNum + 1) % 4;
   }
-  // Returns the dirNum of the direction to the left of given dirNum
+  /**
+   * Returns the dirNum of the direction to the left of given dirNum
+   * @param {dirNum} dirNum
+   */
   function prev(dirNum) {
     return (dirNum + 3) % 4;
   }
-  // Returns the dirNum of the direction opposite the given dirNum
+  /**
+   * Returns the dirNum of the direction opposite the given dirNum
+   * @param {dirNum} dirNum
+   */
   function opposite(dirNum) {
     return (dirNum + 2) % 4;
   }
-  // Returns the dirNum given one of UP, RIGHT, DOWN or LEFT
+  /**
+   * Returns the dirNum given one of UP, RIGHT, DOWN or LEFT
+   * @param {dirNum} dirNum
+   */
   function getDirNum(dir) {
     const [c, r] = dir;
 
@@ -43,7 +62,10 @@ const Directions = (function() {
     }
     throw new Error("Invalid direction: " + dir);
   }
-  // Returns UP, RIGHT, DOWN or LEFT given a number from 0 to 3 inclusive
+  /**
+   * Returns the direction UP, RIGHT, DOWN or LEFT of the given dirNum.
+   * @param {dirNum} dirNum
+   */
   function get(n) {
     return directions[n].slice();
   }
@@ -58,7 +80,7 @@ const Directions = (function() {
   });
 })();
 
-/*
+/**
  * Scoring system is based on standard HTTP status codes.
  * The score at the start of a new game (i.e. zero) is status 100.
  * As we have a finite list of codes, we'll have to cycle back through this
