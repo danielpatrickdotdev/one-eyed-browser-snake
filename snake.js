@@ -154,6 +154,8 @@ const statusCodes = [
 /**
  * Create a dummy snake Array intended for display purposes only.
  * @param {number} length - integer between 0 and 64
+ * @returns {number[][]} - Array of [x, y, dirNum] representing the coordinates
+ *                         and orientation of each part of the dummy snake.
  */
 function constructInitialSnake(length) {
   const UP = Directions.UP,
