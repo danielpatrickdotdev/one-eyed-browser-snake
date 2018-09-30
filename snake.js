@@ -260,41 +260,44 @@ function constructInitialSnake(length) {
   });
 }
 
-/*
+/**
  * Keeps a record of all the snake parts and their orientations,
  * and is responsible for moving the snake so needs to be told to
  * changeDirection() and move() when appropriate.
  *
- * Accepts a number of arguments, although they all have sensible defaults:
+ * @param {Object} [spec] - The initial settings for the snake.
+ * @param {number} [spec.d=0] - integer between 0 and 3 - orientation of the
+ *                              snake.
+ * @param {number} [spec.c=9] - column in which to place head.
+ * @param {number} [spec.r=9] - row in which to place head.
+ * @param {number} [spec.ncols=20] - number of columns on game's board.
+ * @param {number} [spec.nrows=20] - number of rows on game's board.
+ * @param {boolean} [spec.hardBorder=false] - wether he snake can pass through
+ *                                            the board's edges; this affects
+ *                                            how the snake can be moved.
+ * @param {number} [spec.n=3] - number of snake parts to draw including head and
+ *                              tail.
  *
- *   d: direction (0 to 3) - the orientation of the snake - default = 0.
- *
- *   c: column in which to place head - default = 9.
- *
- *   r: row in which to place head - default = 9.
- *
- *   ncols: number of columns on game's board - default = 20.
- *
- *   nrows: number of rows on game's board - default = 20.
- *
- *   hardBorder: wether or not the snake can pass through the board's edges;
- *               this affects how the snake can be moved - default = false.
- *
- *   n: number of snake parts to draw including head and tail - default = 3.
- *      Note that the constructor will not check there are enough spaces in
- *      the board for the snake, so this needs to be considered.
+ * Note that the constructor will not check there are enough spaces in the board
+ * for the snake, so this needs to be considered when choosing params.
  */
 function createSnake(spec={}) {
   const {d=0, c=9, r=9, ncols=20, nrows=20, n=3} = spec;
   let {hardBorder=false} = spec;
 
   const snakeArray = [];
+  /**
+   * direction tracks the last direction actually moved, nextMoveDirection is
+   * assigned when a changeDirection() instruction is received, and applied when
+   * move() is called, at which point direction and nextMoveDirection will be
+   * the same.
+   */
   let direction;
-  let nextMoveDirection; // direction tracks the last direction actually moved
+  let nextMoveDirection;
 
-  /*
-   * Resets state to zero, then builds a snake of length n in direction d.
-   * Assumes n, c, r and d are unchanged since object was constructed.
+  /**
+   * Resets snake's state to zero; builds a snake of length n in direction d,
+   * starting at position c, r.
    */
   function init() {
     function createInitialParts(x, y) {
@@ -307,16 +310,15 @@ function createSnake(spec={}) {
     snakeArray.length = 0; // clear Array
     direction = d;
     nextMoveDirection = direction;
-    createInitialParts(c, r); // Pass c and r so we only alter them locally
+    createInitialParts(c, r);
   }
 
-  /*
-   * Calculates and returns [x, y] position one unit away from [c, r] in
-   * direction dir, where dir is an int:
-   *   0 = UP
-   *   1 = RIGHT
-   *   2 = DOWN
-   *   3 = LEFT
+  /**
+   * Calculates and returns new x and y coordinates one unit away from given
+   * x and y in the direction of dirNum.
+   * @param {number} x - starting horizontal coordinate
+   * @param {number} y - starting vertical coordinate
+   * @param {dirNum} dirNum - direction to move in
    */
   function translate(x, y, dirNum) {
     const [dx, dy] = Directions.get(dirNum);
@@ -328,60 +330,52 @@ function createSnake(spec={}) {
     }
     return [x, y]
   }
-  /*
-   * Calculate the opposite direction to dir, where dir is an int:
-   *   0 = UP
-   *   1 = RIGHT
-   *   2 = DOWN
-   *   3 = LEFT
+  /**
+   * Returns the dirNum of the direction opposite the given dirNum
+   * @param {dirNum} dirNum
    */
   function oppositeDirection(dirNum) {
     return Directions.opposite(dirNum);
   }
-  /*
-   * Calculates and returns [x, y] position one unit away from [c, r] in
-   * the opposite direction to dir, where dir is an int:
-   *   0 = UP (becomes DOWN)
-   *   1 = RIGHT (becomes LEFT)
-   *   2 = DOWN (becomes UP)
-   *   3 = LEFT (becomes RIGHT)
+  /**
+   * Calculates and returns new x and y coordinates one unit away from given
+   * x and y in the opposite direction to the direction of dirNum.
+   * @param {number} x - starting horizontal coordinate
+   * @param {number} y - starting vertical coordinate
+   * @param {dirNum} dirNum - oppisite of direction to move in
    */
   function rtranslate(x, y, dirNum) {
     rdir = oppositeDirection(dirNum);
     return translate(x, y, rdir);
   }
-  /*
-   * Returns the direction the snake is moving in as an int:
-   *   0 = UP (becomes DOWN)
-   *   1 = RIGHT (becomes LEFT)
-   *   2 = DOWN (becomes UP)
-   *   3 = LEFT (becomes RIGHT)
+  /**
+   * Returns dirNum of the direction the snake is moving in currently.
    */
   function getDirection() {
     return direction;
   }
-  /*
-   * Tell the snake to make future moves in newDirection where newDirection is
-   * an int:
-   *   0 = UP
-   *   1 = RIGHT
-   *   2 = DOWN
-   *   3 = LEFT
+  /**
+   * Tell the snake to make future moves in newDirection.
    *
    * newDirection must be a right or left turn from current direction - i.e.
    * if snake is currently travelling UP, newDirection of UP or DOWN will have
    * no impact.
+   *
+   * @param {dirNum} newDirection
    */
   function changeDirection(newDirection) {
     if (newDirection != oppositeDirection(direction)) {
       nextMoveDirection = newDirection;
     }
   }
-  /*
+  /**
    * Move snake one space in its current direction.
-   * If extend is true, the snake's tail will remain in its current location
-   * (i.e. snake will grow by one block), and if false, the tail will move one
-   * block.
+   *
+   * @param {boolean} extend - whether or not the snake should grow by one
+   *                           block while moving.
+   * @returns {(number[]|undefined)} - [x, y, dirNum] of removed tail. Will be
+   *                                   undefined when extend=true because no
+   *                                   tail is removed.
    */
   function move(extend=false) {
     // Update direction - any calls to getDirection will return the last
@@ -399,21 +393,18 @@ function createSnake(spec={}) {
       return snakeArray.pop();
     }
   }
-  /*
-   * Returns a copy of the snake's part's positions and orientations as a flat
-   * Array of ints - [x, y, orientation] - where orientation is:
-   *   0 = UP
-   *   1 = RIGHT
-   *   2 = DOWN
-   *   3 = LEFT
+  /**
+   * @returns {number[][]} - Array of [x, y, dirNum] representing the snake's
+   *                         parts' coordinates and orientation.
    */
   function getPositions() {
     return snakeArray.map(function(part) {
       return part.slice();
     });
   }
-  /*
-   * Use hard = true to allow snake to move through the borders.
+  /**
+   * Set or unset snake's ability to move through borders (wraps around).
+   * @params {boolean} hard - true allows snake to move through the borders.
    */
   function setBorder(hard=false) {
     hardBorder = hard;
