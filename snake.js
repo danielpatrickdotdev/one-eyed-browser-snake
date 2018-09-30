@@ -388,13 +388,11 @@ function createSnake(spec={}) {
     // direction snake moved in
     direction = nextMoveDirection;
 
-    // Insert a copy of current head element into snake at position 1
-    let [x, y, dir] = snakeArray[0];
-    snakeArray.splice(1, 0, [x, y, dir]);
-
-    // Calculate new head position and assign first element of snake array to it
-    [x, y, ] = translate(x, y, direction);
-    snakeArray[0] = [x, y, direction];
+    // Calculate new head position using previous head position and current
+    // direction; insert newHead into snakeArray.
+    const [x, y, ] = snakeArray[0];
+    const newHead = [...translate(x, y, direction), direction];
+    snakeArray.unshift(newHead);
 
     // If we're not told to extend the snake's length, remove the last part
     if (!extend) {
