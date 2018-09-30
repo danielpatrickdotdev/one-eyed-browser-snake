@@ -297,11 +297,11 @@ function createSnake(spec={}) {
    * Assumes n, c, r and d are unchanged since object was constructed.
    */
   function init() {
-    function createInitialParts(c, r) {
-      snakeArray.push([c, r, direction]);
+    function createInitialParts(x, y) {
+      snakeArray.push([x, y, direction]);
       for (let i = 1; i < n; i++) {
-        [c, r] = rtranslate([c, r], direction);
-        snakeArray.push([c, r, direction]);
+        [x, y] = rtranslate(x, y, direction);
+        snakeArray.push([x, y, direction]);
       }
     }
     snakeArray.length = 0; // clear Array
@@ -318,15 +318,15 @@ function createSnake(spec={}) {
    *   2 = DOWN
    *   3 = LEFT
    */
-  function translate([c, r], dir) {
-    const [dx, dy] = Directions.get(dir);
-    c += dx;
-    r += dy;
+  function translate(x, y, dirNum) {
+    const [dx, dy] = Directions.get(dirNum);
+    x += dx;
+    y += dy;
     if (!hardBorder) {
-      c = (c + ncols) % ncols;
-      r = (r + nrows) % nrows;
+      x = (x + ncols) % ncols;
+      y = (y + nrows) % nrows;
     }
-    return [c, r]
+    return [x, y]
   }
   /*
    * Calculate the opposite direction to dir, where dir is an int:
@@ -335,8 +335,8 @@ function createSnake(spec={}) {
    *   2 = DOWN
    *   3 = LEFT
    */
-  function oppositeDirection(dir) {
-    return Directions.opposite(dir);
+  function oppositeDirection(dirNum) {
+    return Directions.opposite(dirNum);
   }
   /*
    * Calculates and returns [x, y] position one unit away from [c, r] in
@@ -346,9 +346,9 @@ function createSnake(spec={}) {
    *   2 = DOWN (becomes UP)
    *   3 = LEFT (becomes RIGHT)
    */
-  function rtranslate(pos, dir) {
-    rdir = oppositeDirection(dir);
-    return translate(pos, rdir);
+  function rtranslate(x, y, dirNum) {
+    rdir = oppositeDirection(dirNum);
+    return translate(x, y, rdir);
   }
   /*
    * Returns the direction the snake is moving in as an int:
@@ -389,12 +389,12 @@ function createSnake(spec={}) {
     direction = nextMoveDirection;
 
     // Insert a copy of current head element into snake at position 1
-    pos = snakeArray[0];
-    snakeArray.splice(1, 0, pos);
+    let [x, y, dir] = snakeArray[0];
+    snakeArray.splice(1, 0, [x, y, dir]);
 
     // Calculate new head position and assign first element of snake array to it
-    newPos = translate(pos, direction);
-    snakeArray[0] = [...newPos.slice(), direction];
+    [x, y, ] = translate(x, y, direction);
+    snakeArray[0] = [x, y, direction];
 
     // If we're not told to extend the snake's length, remove the last part
     if (!extend) {
