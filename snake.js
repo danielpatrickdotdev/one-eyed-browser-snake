@@ -221,23 +221,26 @@ function constructInitialSnake(length) {
 function createSnake(spec={}) {
   const {d=0, c=9, r=9, ncols=20, nrows=20, n=3} = spec;
   let {hardBorder=false} = spec;
+
   const snakeArray = [];
+  let direction;
+  let nextMoveDirection;
 
-  let direction = d;
-  let nextMoveDirection = d;
-
-  function createParts(c, r) {
-    snakeArray.push([c, r, direction]);
-    for (let i = 1; i < n; i++) {
-      [c, r] = rtranslate([c, r], direction);
+  /*
+   * Resets state to zero, then builds a snake of length n in direction d
+   */
+  function init() {
+    function createInitialParts(c, r) {
       snakeArray.push([c, r, direction]);
+      for (let i = 1; i < n; i++) {
+        [c, r] = rtranslate([c, r], direction);
+        snakeArray.push([c, r, direction]);
+      }
     }
-  }
-  function reset() {
     snakeArray.length = 0;
     direction = d;
     nextMoveDirection = direction;
-    createParts(c, r);
+    createInitialParts(c, r);
   }
 
   function translate([c, r], dir) {
@@ -299,10 +302,10 @@ function createSnake(spec={}) {
     hardBorder = hard;
   }
 
-  createParts(c, r);
+  init();
 
   return {
-    reset,
+    reset: init,
     setBorder,
     move,
     getDirection,
