@@ -432,7 +432,6 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
   }
   const scoreDiv = document.getElementById("score");
   const statusDiv = document.getElementById("status-message");
-  let targetElem = null;
   function drawBorder() {
     gameDiv.appendChild(createBorder(h, w));
   }
@@ -556,12 +555,13 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
     });
   }
   function removeTarget() {
+    const targetElem = gameDiv.querySelector(".target");
     if (targetElem !== null) {
       gameDiv.removeChild(targetElem);
     }
   }
   function drawTarget([col, row]) {
-    targetElem = document.createElement("div");
+    const targetElem = document.createElement("div");
     targetElem.classList.add("target", `col-${col}`, `row-${row}`);
     gameDiv.appendChild(targetElem);
   }
