@@ -435,8 +435,6 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
   function drawBorder() {
     gameDiv.appendChild(createBorder(h, w));
   }
-  gameDiv.addEventListener("click", pauseHandler);
-  drawBorder();
 
   function createBorder(h, w) {
     function createBorderDiv(colClass, rowClass) {
@@ -460,7 +458,7 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
 
     return fragment;
   }
-  function reset() {
+  function init() {
     gameDiv.addEventListener("click", pauseHandler);
     gameDiv.classList.remove("game-over");
     gameDiv.innerHTML = "";
@@ -574,8 +572,10 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
     hardBorder = hard;
   }
 
+  init();
+
   return {
-    reset,
+    reset: init,
     setBorder,
     setPaused,
     unsetPaused,
