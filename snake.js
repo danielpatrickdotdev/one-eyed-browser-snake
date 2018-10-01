@@ -552,13 +552,6 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
       }
     }
   }
-  function removeSnake() {
-    Array.from(gameDiv.children).forEach(function (elem) {
-      if (elem.classList.contains("snake")) {
-        gameDiv.removeChild(elem);
-      }
-    });
-  }
   function drawTarget([col, row]) {
     const targetElem = document.createElement("div");
     targetElem.classList.add("target", `col-${col}`, `row-${row}`);
