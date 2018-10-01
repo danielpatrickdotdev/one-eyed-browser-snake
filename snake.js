@@ -470,12 +470,12 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
     div.appendChild(textDiv);
     return div;
   }
-  function createSnakePart(col, row, dir, isHead, isTail=false) {
+  function createSnakePart({col, row, dir, head=false, tail=false}) {
     const elem = document.createElement("div");
-    if (isHead) {
+    if (head) {
       elem.classList.add("snake-head");
     }
-    if (isTail) {
+    if (tail) {
       elem.classList.add("snake-tail");
     }
     elem.classList.add("snake", `col-${col}`, `row-${row}`, `dir-${dir}`);
@@ -522,10 +522,13 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
   }
   function drawSnake(positions) {
     for (let i = 0; i < positions.length; i++) {
-      const pos = positions[i];
-      const head = i === 0;
-      const tail = i === (positions.length - 1);
-      const elem = createSnakePart(...pos, head, tail);
+      const partSpec = {
+        head: i === 0,
+        tail: i === (positions.length - 1)
+      };
+      [partSpec.col, partSpec.row, partSpec.dir] = positions[i];
+
+      const elem = createSnakePart(partSpec);
       gameDiv.appendChild(elem);
     };
   }
@@ -534,8 +537,9 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
       const headElem = gameDiv.querySelector(".snake-head");
       headElem.classList.remove("snake-head");
 
-      let [col, row, dir] = positions[0];
-      const elem = createSnakePart(col, row, dir, true);
+      const partSpec = {head: true};
+      [partSpec.col, partSpec.row, partSpec.dir] = positions[0];
+      const elem = createSnakePart(partSpec);
       gameDiv.appendChild(elem);
       if (remove) {
         [col, row,] = remove;
