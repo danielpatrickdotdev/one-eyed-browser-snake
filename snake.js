@@ -432,9 +432,6 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
   }
   const scoreDiv = document.getElementById("score");
   const statusDiv = document.getElementById("status-message");
-  function drawBorder() {
-    gameDiv.appendChild(createBorder(h, w));
-  }
 
   function createBorder(h, w) {
     function createBorderDiv(colClass, rowClass) {
@@ -458,11 +455,8 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
 
     return fragment;
   }
-  function init() {
-    gameDiv.addEventListener("click", pauseHandler);
-    gameDiv.classList.remove("game-over");
-    gameDiv.innerHTML = "";
-    drawBorder();
+  function drawBorder() {
+    gameDiv.appendChild(createBorder(h, w));
   }
   function createOverlay(id, text) {
     const textDiv = document.createElement("div");
@@ -476,15 +470,27 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
     div.appendChild(textDiv);
     return div;
   }
-  function setPaused() {
-    const pausedDiv = createOverlay("paused-overlay", "PAUSED");
+  function createSnakePart(col, row, dir, isHead, isTail=false) {
+    const elem = document.createElement("div");
+    if (isHead) {
+      elem.classList.add("snake-head");
+    }
+    if (isTail) {
+      elem.classList.add("snake-tail");
+    }
+    elem.classList.add("snake", `col-${col}`, `row-${row}`, `dir-${dir}`);
 
-    gameDiv.classList.add("paused");
-    gameDiv.appendChild(pausedDiv);
+    return elem;
   }
-  function unsetPaused() {
-    gameDiv.classList.remove("paused");
-    gameDiv.removeChild(document.getElementById("paused-overlay"));
+
+  init();
+
+  // Public methods
+  function init() {
+    gameDiv.addEventListener("click", pauseHandler);
+    gameDiv.classList.remove("game-over");
+    gameDiv.innerHTML = "";
+    drawBorder();
   }
   function setGameOver() {
     const newGameLink = document.createElement("div");
@@ -501,17 +507,18 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
     gameDiv.removeEventListener("click", pauseHandler);
     gameDiv.appendChild(gameOverDiv);
   }
-  function createSnakePart(col, row, dir, isHead, isTail=false) {
-    const elem = document.createElement("div");
-    if (isHead) {
-      elem.classList.add("snake-head");
-    }
-    if (isTail) {
-      elem.classList.add("snake-tail");
-    }
-    elem.classList.add("snake", `col-${col}`, `row-${row}`, `dir-${dir}`);
+  function setPaused() {
+    const pausedDiv = createOverlay("paused-overlay", "PAUSED");
 
-    return elem;
+    gameDiv.classList.add("paused");
+    gameDiv.appendChild(pausedDiv);
+  }
+  function unsetPaused() {
+    gameDiv.classList.remove("paused");
+    gameDiv.removeChild(document.getElementById("paused-overlay"));
+  }
+  function setBorder(hard=false) {
+    hardBorder = hard;
   }
   function drawSnake(positions) {
     for (let i = 0; i < positions.length; i++) {
@@ -552,34 +559,29 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
       }
     });
   }
+  function drawTarget([col, row]) {
+    const targetElem = document.createElement("div");
+    targetElem.classList.add("target", `col-${col}`, `row-${row}`);
+    gameDiv.appendChild(targetElem);
+  }
   function removeTarget() {
     const targetElem = gameDiv.querySelector(".target");
     if (targetElem !== null) {
       gameDiv.removeChild(targetElem);
     }
   }
-  function drawTarget([col, row]) {
-    const targetElem = document.createElement("div");
-    targetElem.classList.add("target", `col-${col}`, `row-${row}`);
-    gameDiv.appendChild(targetElem);
-  }
   function drawScore(score) {
     const {code, message} = statusCodes[score % statusCodes.length];
     scoreDiv.innerHTML = `${code}`;
     statusDiv.innerHTML = `${message}`;
   }
-  function setBorder(hard=false) {
-    hardBorder = hard;
-  }
-
-  init();
 
   return {
     reset: init,
-    setBorder,
+    setGameOver,
     setPaused,
     unsetPaused,
-    setGameOver,
+    setBorder,
     drawSnake,
     updateSnake,
     drawTarget,
