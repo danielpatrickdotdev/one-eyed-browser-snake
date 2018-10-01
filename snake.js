@@ -433,13 +433,10 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
   const scoreDiv = document.getElementById("score");
   const statusDiv = document.getElementById("status-message");
   let targetElem = null;
-  function setPauseHandler(handler) {
-    gameDiv.addEventListener("click", pauseHandler);
-  }
   function drawBorder() {
     gameDiv.appendChild(createBorder(h, w));
   }
-  setPauseHandler(pauseHandler);
+  gameDiv.addEventListener("click", pauseHandler);
   drawBorder();
 
   function createBorder(h, w) {
@@ -465,9 +462,7 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
     return fragment;
   }
   function reset() {
-    setTimeout(function() {
-      setPauseHandler(pauseHandler);
-    }, 50);
+    gameDiv.addEventListener("click", pauseHandler);
     gameDiv.classList.remove("game-over");
     gameDiv.innerHTML = "";
     drawBorder();
@@ -757,6 +752,7 @@ function game() {
   }
 
   function newGameHandler(e) {
+    e.stopPropagation();
     snake.reset();
     ui.reset();
     speed = 0;
