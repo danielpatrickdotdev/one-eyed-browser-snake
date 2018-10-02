@@ -856,7 +856,12 @@ function game() {
     return 50 + Math.floor(speedFraction ** 2 * 250);
   }
 
-  function pauseHandler(e) {
+  /**
+   * Event handler to pause the game or restart a paused game.
+   *
+   * @params {event} [e] - DOM event object
+   */
+  function pauseHandler(e=null) {
     if (gameloop.isStarted()) {
       ui.setPaused();
       gameloop.pause();
@@ -864,7 +869,9 @@ function game() {
       ui.unsetPaused();
       gameloop.start();
     }
-    e.preventDefault();
+    if (e !== null && typeof e.preventDefault === "function") {
+      e.preventDefault();
+    }
   }
 
   function gameOver() {
