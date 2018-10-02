@@ -701,11 +701,9 @@ function game() {
   const snake = createSnake({hardBorder});
   const ui = createUI(hardBorder, pauseHandler, newGameHandler);
 
-  const target = [-1, -1];
-  let speed = 0;
-  let score = getScoreFromHTML();
-  let extend = false;
+  const target = [-1, -1]; // Initialise with dummy values
   let state = "STOPPED";
+  let speed, score, extend; // Assign initial values via init()
 
   document.addEventListener("keydown", function(e) {
     const key = e.key;
@@ -858,13 +856,21 @@ function game() {
     return score;
   }
 
-  function newGameHandler(e) {
-    e.stopPropagation();
-    snake.reset();
-    ui.reset();
+  function init() {
     speed = 0;
     score = 0;
     extend = false;
+  }
+
+  function reset() {
+    init();
+    snake.reset();
+    ui.reset();
+  }
+
+  function newGameHandler(e) {
+    e.stopPropagation();
+    reset();
     play();
     e.preventDefault();
   }
@@ -879,16 +885,23 @@ function game() {
     start();
   }
 
-  //play(0);
-  const snakePositions = constructInitialSnake(score + 3);
-  // Place target next to head of snake
-  const targetPos = [0, 19].includes(snakePositions[0][0]) ?
-                    [snakePositions[0][0], snakePositions[2][1]] :
-                    [snakePositions[2][0], snakePositions[0][1]];
-  ui.drawSnake(snakePositions);
-  ui.drawTarget(targetPos);
-  ui.drawScore(score);
-  ui.setGameOver();
+  init();
+
+  score = getScoreFromHTML();
+
+  if (score === 0) {
+    play();
+  } else {
+    const snakePositions = constructInitialSnake(score + 3);
+    // Place target next to head of snake
+    const targetPos = [0, 19].includes(snakePositions[0][0]) ?
+                      [snakePositions[0][0], snakePositions[2][1]] :
+                      [snakePositions[2][0], snakePositions[0][1]];
+    ui.drawSnake(snakePositions);
+    ui.drawTarget(targetPos);
+    ui.drawScore(score);
+    ui.setGameOver();
+  }
 }
 
 game();
