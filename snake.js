@@ -4,9 +4,9 @@
  */
 const Directions = (function() {
  /**
-  * UP, DOWN, LEFT and RIGHT represent the cartesian coordinate that would need
-  * to be added to another cartesian coordinate, A, in order to produce a new
-  * coordinate, B, where B is positioned one unit away in that direction from A.
+  * UP, DOWN, LEFT and RIGHT represent cartesian coordinates for the positions
+  * one unit away from [0, 0]. They can be added to another cartesian coordinate
+  * in order to produce a new coordinate one unit away in the chosen direction.
   */
   const UP = [0, -1],
         RIGHT = [1, 0],
