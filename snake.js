@@ -697,7 +697,6 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
 }
 
 function game() {
-  //let hardBorder = false;
   let hardBorder = true;
   const snake = createSnake({hardBorder});
   const ui = createUI(hardBorder, pauseHandler, newGameHandler);
