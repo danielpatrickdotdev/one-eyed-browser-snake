@@ -835,8 +835,21 @@ function game() {
     }
   });
 
+  /**
+   * Calculates the interval between ticks for the given speed.
+   *   Interval increases exponentially as speed decreases.
+   *   i.e. the gap between intervals gets smaller as speed increases.
+   *   This is because as we approach a 50ms interval, changes will be
+   *   more noticable.
+   *
+   * @param {number} speed - Integer 0 to 50.
+   * @returns {number} - Integer 50 to 300.
+   */
   function calculateInterval(speed) {
-    const speedFraction = (50 - speed) / 50;
+    // If speed is < 0 or > 50, change to 0 or 50 respectively
+    speed = Math.min(Math.max(0, speed), 50);
+
+    const speedFraction = 1 - speed / 50;
     return 50 + Math.floor(speedFraction ** 2 * 250);
   }
 
