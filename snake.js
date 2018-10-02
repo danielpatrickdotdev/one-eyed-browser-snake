@@ -811,10 +811,10 @@ function game() {
   document.addEventListener("keydown", function(e) {
     const key = e.key;
 
-    if (!gameloop.isStopped() && key === " ") {
+    if (key === " ") {
       // Handle spacebar => pause
-      togglePaused();
-      e.preventDefault();
+      pauseHandler(e);
+      return;
     } else if (!gameloop.isStarted()) {
       // All other keypresses only work if game in progress
       return;
@@ -843,7 +843,8 @@ function game() {
     const speedFraction = (50 - speed) / 50;
     return 50 + Math.floor(speedFraction ** 2 * 250);
   }
-  function togglePaused() {
+
+  function pauseHandler(e) {
     if (gameloop.isStarted()) {
       ui.setPaused();
       gameloop.pause();
@@ -851,9 +852,6 @@ function game() {
       ui.unsetPaused();
       gameloop.start();
     }
-  }
-  function pauseHandler(e) {
-    togglePaused();
     e.preventDefault();
   }
   function gameOver() {
