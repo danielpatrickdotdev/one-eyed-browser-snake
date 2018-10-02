@@ -926,27 +926,28 @@ function game() {
   }
 
   function setTarget(occupied) {
-    if (occupied.length < 200) {
-      function randomTarget() {
-        target[0] = Math.floor(Math.random() * 20);
-        target[1] = Math.floor(Math.random() * 20);
-      }
-
-      randomTarget();
-      while (occupied.some(function(tile) {
-        return positionsEqual(target, tile);
-      })) {
-        randomTarget();
-      };
-    } else {
-      const unoccupied = Array.from(Array(400).keys()).map(function(value) {
-        return [Math.floor(value / 20), value % 20];
-      }).filter(function(pos) {
-        return !occupied.some(function(tile) {
-          return positionsEqual(pos, tile);
-        });
-      });
+    function convertToCoords(n) {
+      return [Math.floor(n / 20), n % 20];
     }
+    /*
+     * Construct an Array representing all 400 board positions, remove the
+     * occupied ones and select a random position from the resulting Array.
+     *
+     * Yes, just selecting a random position and checking it's free might be
+     * faster *most* of the time, but this is more precise.
+     */
+    const unoccupied = Array.from(Array(400).keys()).map(function(value) {
+      return value;
+    }).filter(function(index) {
+      // Remove occupied positions
+      return !occupied.some(function(tile) {
+        return positionsEqual(convertToCoords(index), tile);
+      });
+    });
+
+    // Select a random element from the list
+    const randomIndex = Math.floor(Math.random() * unoccupied.length);
+    [target[0], target[1]] = convertToCoords(unoccupied[randomIndex]);
   }
 
   function getScoreFromHTML() {
