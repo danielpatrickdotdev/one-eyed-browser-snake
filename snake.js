@@ -820,8 +820,7 @@ function game() {
       return;
     }
 
-    if (key === "Space") {
-    } else if (key === "ArrowUp") {
+    if (key === "ArrowUp") {
       snake.changeDirection(0);
       e.preventDefault();
     } else if (key === "ArrowRight") {
