@@ -874,6 +874,10 @@ function game() {
     }
   }
 
+  /**
+   * Increase speed and accelerate gameloop.
+   * If speed is already at max (50) then does nothing.
+   */
   function incrementSpeed() {
     if (speed === 50 || speed > (score * 2)) {
       return;
@@ -882,10 +886,23 @@ function game() {
     gameloop.setInterval(calculateInterval(speed));
   }
 
+  /*
+   * Tests if two sets of cartesian coordinates are equal. Only uses first two
+   * elements of each argument; ignores any additional elements.
+   *
+   * @param {number[]} pos1 - first x, y position to compare.
+   * @param {number[]} pos2 - second x, y position to compare.
+   * @returns {boolean} - true if pos1 and pos2 are equal.
+   */
   function positionsEqual(pos1, pos2) {
     return pos1[0] === pos2[0] && pos1[1] === pos2[1];
   }
 
+  /**
+   * To be called when the snake has collided with the target.
+   * Side affects will likely include removing the target, creating a new one,
+   * and updating the score, speed and snake length.
+   */
   function processTargetCollision() {
     ui.removeTarget();
     extend = true;
@@ -898,6 +915,14 @@ function game() {
     ui.drawTarget(target);
   }
 
+  /**
+   * Tests whether the snake has collided with itself or a game border, taking
+   * into account whether borders are permeable or not (using hardBorder).
+   *
+   * @param {number[][]} positions - Array of [x, y, dirNum] representing the
+   *                                 snake's parts' coordinates and orientation.
+   * @returns {boolean} - true if snake has collided with border or itself.
+   */
   function checkForCollisions(positions) {
     if (positions.length == 0) {
       return false;
@@ -911,6 +936,11 @@ function game() {
     }) || checkForCollisions(positions.slice(1));
   }
 
+  /**
+   * Updates moving game parts (snake) one tick.
+   * Checks for collisions and ends game if appropriate. Checks for capturing
+   * of target and updates score and other variables accordingly.
+   */
   function move() {
     toRemove = snake.move(extend);
     extend = false;
@@ -925,6 +955,14 @@ function game() {
     }
   }
 
+  /**
+   * Sets the target position as a random position on the board that
+   * isn't currently occupied.
+   *
+   * @param {number[][]} occupied - Array of x, y positions which are already
+   *                                occupied and therefore cannot accept the
+   *                                target.
+   */
   function setTarget(occupied) {
     function convertToCoords(n) {
       return [Math.floor(n / 20), n % 20];
@@ -950,6 +988,14 @@ function game() {
     [target[0], target[1]] = convertToCoords(unoccupied[randomIndex]);
   }
 
+  /**
+   * Reads the statusCode "score" from the DOM and converts into an integer
+   * score (where status 100 becomes 0). If the DOM element with id "score"
+   * is empty or contains an invalid score, result will be zero.
+   *
+   * @returns {number} - Integer representing the index of the statusCode
+   *                     or zero if unable to recognise the statusCode.
+   */
   function getScoreFromHTML() {
     const scoreDiv = document.getElementById("score");
     const scoreCode = parseInt(scoreDiv.innerHTML);
@@ -965,6 +1011,9 @@ function game() {
     return score;
   }
 
+  /**
+   * Sets game state (speed, score, etc) ready for a new game.
+   */
   function init() {
     speed = 0;
     score = 0;
@@ -972,12 +1021,21 @@ function game() {
     gameloop.setInterval(calculateInterval(speed));
   }
 
+  /**
+   * Resets game state, UI and snake ready for a new game.
+   * Only needed after game has been completed - for first game init() will do.
+   */
   function reset() {
     init();
     snake.reset();
     ui.reset();
   }
 
+  /**
+   * Handles events which call for a new game to be started.
+   *
+   * @params {event} [e] - DOM event object
+   */
   function newGameHandler(e) {
     e.stopPropagation();
     reset();
@@ -985,6 +1043,9 @@ function game() {
     e.preventDefault();
   }
 
+  /**
+   * Starts the game playing - to be called after init() or reset() only.
+   */
   function play() {
     const snakePositions = snake.getPositions();
     setTarget(snakePositions);
@@ -996,18 +1057,27 @@ function game() {
     gameloop.start();
   }
 
+  // Set initial variables
   init();
 
+  // Read score from DOM
   score = getScoreFromHTML();
 
   if (score === 0) {
+    // No score set in DOM, or score was set to zero, so we
+    // start playing immediately.
     play();
   } else {
+    // If score was set in DOM, we start in gameover state
+
+    // Create dummy snake to display
     const snakePositions = constructInitialSnake(score + 3);
     // Place target next to head of snake
     const targetPos = [0, 19].includes(snakePositions[0][0]) ?
                       [snakePositions[0][0], snakePositions[2][1]] :
                       [snakePositions[2][0], snakePositions[0][1]];
+
+    // Draw game pieces and show gameover overlay
     ui.drawSnake(snakePositions);
     ui.drawTarget(targetPos);
     ui.drawScore(score);
