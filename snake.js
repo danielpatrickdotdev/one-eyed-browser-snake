@@ -867,28 +867,18 @@ function game() {
     speed++;
     gameloop.setInterval(calculateInterval(speed));
   }
-  function incrementScore() {
+  function processTargetCollision() {
+    ui.removeTarget();
+    extend = true;
     score++;
     if (score % 2 === 0) {
       incrementSpeed();
     }
+    ui.drawScore(score);
+    setTarget(snake.getPositions());
+    ui.drawTarget(target);
   }
-  function move() {
-    toRemove = snake.move(extend);
-    extend = false;
-    if (checkForCollisions(snake.getPositions())) {
-      gameOver();
-      return;
-    } else if (positionsEqual(snake.getPositions()[0], target)) {
-      ui.removeTarget();
-      extend = true;
-      incrementScore();
-      ui.drawScore(score);
-      setTarget(snake.getPositions());
-      ui.drawTarget(target);
-    }
-    ui.updateSnake(snake.getPositions(), toRemove);
-  }
+
   function checkForCollisions(positions) {
     if (positions.length == 0) {
       return false;
@@ -901,6 +891,20 @@ function game() {
       return positionsEqual(pos, otherPos);
     }) || checkForCollisions(positions.slice(1));
   }
+
+  function move() {
+    toRemove = snake.move(extend);
+    extend = false;
+    if (checkForCollisions(snake.getPositions())) {
+      gameOver();
+    } else {
+      if (positionsEqual(snake.getPositions()[0], target)) {
+        processTargetCollision();
+      }
+      ui.updateSnake(snake.getPositions(), toRemove);
+    }
+  }
+
   function setTarget(occupied) {
     if (occupied.length < 200) {
       function randomTarget() {
