@@ -799,6 +799,7 @@ function gameLoop(callback, interval=null) {
   }
 }
 
+// Run the game.
 function game() {
   let hardBorder = true;
   const snake = createSnake({hardBorder});
@@ -806,8 +807,9 @@ function game() {
 
   const target = [-1, -1]; // Initialise with dummy values
   let speed, score, extend; // Assign initial values via init()
-  const gameloop = gameLoop(move);
+  const gameloop = gameLoop(move); // Set game loop callback
 
+  // Listen for the key events the game uses, ignore all others
   document.addEventListener("keydown", function(e) {
     const key = e.key;
 
@@ -820,6 +822,7 @@ function game() {
       return;
     }
 
+    // Handle arrow keys
     if (key === "ArrowUp") {
       snake.changeDirection(0);
       e.preventDefault();
