@@ -835,9 +835,6 @@ function game() {
     }
   });
 
-  function positionsEqual(pos1, pos2) {
-    return pos1[0] === pos2[0] && pos1[1] === pos2[1];
-  }
   function calculateInterval(speed) {
     const speedFraction = (50 - speed) / 50;
     return 50 + Math.floor(speedFraction ** 2 * 250);
@@ -853,10 +850,12 @@ function game() {
     }
     e.preventDefault();
   }
+
   function gameOver() {
     gameloop.stop();
     ui.setGameOver();
   }
+
   function incrementSpeed() {
     if (speed === 50 || speed > (score * 2)) {
       return;
@@ -864,6 +863,11 @@ function game() {
     speed++;
     gameloop.setInterval(calculateInterval(speed));
   }
+
+  function positionsEqual(pos1, pos2) {
+    return pos1[0] === pos2[0] && pos1[1] === pos2[1];
+  }
+
   function processTargetCollision() {
     ui.removeTarget();
     extend = true;
@@ -925,6 +929,7 @@ function game() {
       });
     }
   }
+
   function getScoreFromHTML() {
     const scoreDiv = document.getElementById("score");
     const scoreCode = parseInt(scoreDiv.innerHTML);
@@ -959,6 +964,7 @@ function game() {
     play();
     e.preventDefault();
   }
+
   function play() {
     const snakePositions = snake.getPositions();
     setTarget(snakePositions);
