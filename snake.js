@@ -598,8 +598,8 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
   /**
    * Draws snake using supplied array of positions and orientations.
    *
-   * @param {number[][]} - Array of [x, y, dirNum] representing the snake's
-   *                         parts' coordinates and orientation.
+   * @param {number[][]} positions - Array of [x, y, dirNum] representing the
+   *                                 snake's parts' coordinates and orientation.
    */
   function drawSnake(positions) {
     for (let i = 0; i < positions.length; i++) {
@@ -617,8 +617,8 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
   /**
    * As drawSnake but updates the snake displayed.
    *
-   * @param {number[][]} - Array of [x, y, dirNum] representing the snake's
-   *                         parts' coordinates and orientation.
+   * @param {number[][]} positions - Array of [x, y, dirNum] representing the
+   *                                 snake's parts' coordinates and orientation.
    * @param {boolean} remove - whether or not we should remove a block. If the
    *                           snake has grown this turn, this will be false.
    *                           This argument is required so that this method
