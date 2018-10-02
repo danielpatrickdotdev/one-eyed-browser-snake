@@ -62,6 +62,9 @@ body {
   width: 200px;
   padding-top: 36px;
 }
+#game #javascript-disabled-overlay {
+  padding-top: 5px;
+}
 #game .overlay .border {
   background-color: #333;
   opacity: 1;
