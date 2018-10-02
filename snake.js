@@ -696,23 +696,126 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
   }
 }
 
+/**
+ * Runs the game using provided callback. Calls callback at specified intervals.
+ *
+ * @param {function} callback - Callback to be called at specified interval.
+ * @param {number} interval - Number of milliseconds between calls to callback.
+ */
+function gameLoop(callback, interval=null) {
+  let state = "STOPPED";
+  let timerId = null;
+
+  // Starts timer
+  function _start() {
+    if (interval === null) {
+      throw new Error(
+        "timer interval must be set before timer can start"
+      );
+    }
+
+    timerId = setInterval(function() {
+      callback();
+    }, interval);
+  }
+
+  // Stops timer, if started
+  function _stop() {
+    if (timerId !== null) {
+      clearInterval(timerId);
+      timerId = null;
+    }
+  }
+
+  /**
+   * Start game loop
+   */
+  function start() {
+    state = "STARTED";
+    _start();
+  }
+
+  /**
+   * Stop game loop
+   */
+  function stop() {
+    state = "STOPPED";
+    _stop();
+  }
+
+  /**
+   * Pause game loop
+   */
+  function pause() {
+    state = "PAUSED";
+    _stop();
+  }
+
+  /**
+   * Change interval between calls to callback
+   *
+   * @param {number} newInterval - Number of milliseconds to wait between calls
+   *                               to callback.
+   */
+  function setInterval_(newInterval) {
+    interval = newInterval;
+
+    // If started, restart with new interval
+    if (timerId !== null) {
+      _stop();
+      _start();
+    }
+  }
+
+  /**
+   * Returns true if game loop is started, false otherwise.
+   */
+  function isStarted() {
+    return state === "STARTED";
+  }
+
+  /**
+   * Returns true if game loop is stopped, false otherwise.
+   */
+  function isStopped() {
+    return state === "STOPPED";
+  }
+
+  /**
+   * Returns true if game loop is paused, false otherwise.
+   */
+  function isPaused() {
+    return state === "PAUSED";
+  }
+
+  return {
+    start,
+    stop,
+    pause,
+    isStarted,
+    isStopped,
+    isPaused,
+    setInterval: setInterval_
+  }
+}
+
 function game() {
   let hardBorder = true;
   const snake = createSnake({hardBorder});
   const ui = createUI(hardBorder, pauseHandler, newGameHandler);
 
   const target = [-1, -1]; // Initialise with dummy values
-  let state = "STOPPED";
   let speed, score, extend; // Assign initial values via init()
+  const gameloop = gameLoop(move);
 
   document.addEventListener("keydown", function(e) {
     const key = e.key;
 
-    if ((state === "STARTED" || state === "PAUSED") && key === " ") {
+    if (!gameloop.isStopped() && key === " ") {
       // Handle spacebar => pause
       togglePaused();
       e.preventDefault();
-    } else if (state !== "STARTED") {
+    } else if (!gameloop.isStarted()) {
       // All other keypresses only work if game in progress
       return;
     }
@@ -733,47 +836,28 @@ function game() {
     }
   });
 
-  let timerId = null;
   function positionsEqual(pos1, pos2) {
     return pos1[0] === pos2[0] && pos1[1] === pos2[1];
   }
-  function stopTimer() {
-    if (timerId !== null) {
-      clearInterval(timerId);
-      timerId = null;
-    }
-  }
-  function stop() {
-    state = "STOPPED";
-    stopTimer();
-  }
-  function pause() {
-    state = "PAUSED";
-    stopTimer();
+  function calculateInterval(speed) {
+    const speedFraction = (50 - speed) / 50;
+    return 50 + Math.floor(speedFraction ** 2 * 250);
   }
   function togglePaused() {
-    if (state === "STARTED") {
+    if (gameloop.isStarted()) {
       ui.setPaused();
-      pause();
-    } else if (state === "PAUSED") {
+      gameloop.pause();
+    } else if (gameloop.isPaused()) {
       ui.unsetPaused();
-      start(speed);
+      gameloop.start();
     }
   }
   function pauseHandler(e) {
     togglePaused();
     e.preventDefault();
   }
-  function start() {
-    state = "STARTED";
-    const speedFraction = (50 - speed) / 50;
-    const interval = 50 + Math.floor(speedFraction ** 2 * 250);
-    timerId = setInterval(function() {
-      move();
-    }, interval);
-  }
   function gameOver() {
-    stop();
+    gameloop.stop();
     ui.setGameOver();
   }
   function incrementSpeed() {
@@ -781,8 +865,7 @@ function game() {
       return;
     }
     speed++;
-    stop();
-    start();
+    gameloop.setInterval(calculateInterval(speed));
   }
   function incrementScore() {
     score++;
@@ -860,6 +943,7 @@ function game() {
     speed = 0;
     score = 0;
     extend = false;
+    gameloop.setInterval(calculateInterval(speed));
   }
 
   function reset() {
@@ -882,7 +966,7 @@ function game() {
     ui.drawTarget(target);
     ui.drawSnake(snakePositions);
 
-    start();
+    gameloop.start();
   }
 
   init();
