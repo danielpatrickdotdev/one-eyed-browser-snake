@@ -874,11 +874,6 @@ function game() {
     }
   }
 
-  function gameOver() {
-    gameloop.stop();
-    ui.setGameOver();
-  }
-
   function incrementSpeed() {
     if (speed === 50 || speed > (score * 2)) {
       return;
@@ -920,7 +915,8 @@ function game() {
     toRemove = snake.move(extend);
     extend = false;
     if (checkForCollisions(snake.getPositions())) {
-      gameOver();
+      gameloop.stop();
+      ui.setGameOver();
     } else {
       if (positionsEqual(snake.getPositions()[0], target)) {
         processTargetCollision();
