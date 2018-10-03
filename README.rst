@@ -8,7 +8,7 @@ An HTML & JS snake clone.
 Development
 -----------
 
-... code-block:: console
+.. code-block:: console
 
     git clone git@github.com:remarkablerocket/one-eyed-browser-snake.git
     cd one-eyed-browser-snake
@@ -18,6 +18,6 @@ Development
 Running tests
 -------------
 
-... code-block:: console
+.. code-block:: console
 
     npm test
