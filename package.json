@@ -2,7 +2,7 @@
   "name": "one-eyed-browser-snake",
   "version": "1.0.0",
   "description": "A snake clone",
-  "main": "src/snake.js",
+  "private": true,
   "dependencies": {},
   "devDependencies": {},
   "scripts": {},
