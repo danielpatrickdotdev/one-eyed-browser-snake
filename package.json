@@ -4,7 +4,10 @@
   "description": "A snake clone",
   "private": true,
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2"
+  },
   "scripts": {},
   "repository": {
     "type": "git",
