@@ -348,7 +348,7 @@ function createSnake(spec={}) {
    * @param {dirNum} dirNum - oppisite of direction to move in
    */
   function rtranslate(x, y, dirNum) {
-    rdir = oppositeDirection(dirNum);
+    const rdir = oppositeDirection(dirNum);
     return translate(x, y, rdir);
   }
   /**
@@ -635,13 +635,13 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
       const elem = createSnakePart(partSpec);
       gameDiv.appendChild(elem);
       if (remove) {
-        [col, row,] = remove;
+        let [col, row,] = remove;
         const elem = gameDiv.querySelector(`.snake.col-${col}.row-${row}`);
         gameDiv.removeChild(elem);
 
         [col, row,] = positions.slice(-1)[0];
         const [prevCol, prevRow,] = positions.slice(-2)[0];
-        dir = Directions.getDirNum([prevCol - col, prevRow - row]);
+        const dir = Directions.getDirNum([prevCol - col, prevRow - row]);
         const newTailElem = gameDiv.querySelector(`.snake.col-${col}.row-${row}`);
         newTailElem.classList.add("snake-tail");
         newTailElem.classList.remove("dir-0", "dir-1", "dir-2", "dir-3", "dir-4");
@@ -942,7 +942,7 @@ function game() {
    * of target and updates score and other variables accordingly.
    */
   function move() {
-    toRemove = snake.move(extend);
+    const toRemove = snake.move(extend);
     extend = false;
     if (checkForCollisions(snake.getPositions())) {
       gameloop.stop();
