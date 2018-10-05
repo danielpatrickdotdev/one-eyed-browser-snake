@@ -1,20 +1,16 @@
-@font-face{
-  font-family:'led-font';
-  src: url('digital-7.mono.ttf');
-}
 body {
+  font-family: "VT323", monospace;
   background-color: #333;
 }
 .container {
-  font-family: led-font;
   width: 500px;
   margin: auto;
 }
 #score-card {
   width: 500px;
   font-size: 48px;
-  padding-top: 24px;
-  padding-bottom: 24px;
+  padding-top: 12px;
+  padding-bottom: 12px;
   color: #fff;
 }
 #score {
@@ -72,7 +68,7 @@ body {
 #game .overlay-text span {
   display: inline-block;
   font-size: 24px;
-  padding: 6px;
+  padding: 0.6px;
   margin-left: auto;
   margin-right: auto;
 }
