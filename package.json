@@ -12,6 +12,7 @@
     "webpack-cli": "^3.1.2"
   },
   "scripts": {
+    "build-example": "webpack -o example/snake.bundle.js",
     "build": "webpack",
     "test-init": "jest --init",
     "test": "jest"
