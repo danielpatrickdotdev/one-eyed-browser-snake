@@ -12,7 +12,7 @@ Development
 
     git clone git@github.com:remarkablerocket/one-eyed-browser-snake.git
     cd one-eyed-browser-snake
-    npm install
+    npm install --only=dev --no-save
 
 -------------
 Running tests
