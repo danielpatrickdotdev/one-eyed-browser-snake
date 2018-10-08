@@ -9,4 +9,22 @@ describe("Directions", function() {
       expect(Directions.get(3)).toEqual([-1, 0]);
     });
   });
+
+  describe("getDirNum", function() {
+    it("converts cartesian to appropriate int", function() {
+      expect(Directions.getDirNum([0, -1])).toBe(0);
+      expect(Directions.getDirNum([1, 0])).toBe(1);
+      expect(Directions.getDirNum([0, 1])).toBe(2);
+      expect(Directions.getDirNum([-1, 0])).toBe(3);
+    });
+  });
+
+  describe("opposite", function() {
+    it("returns int for opposite direction", function() {
+      expect(Directions.opposite(0)).toBe(2);
+      expect(Directions.opposite(1)).toBe(3);
+      expect(Directions.opposite(2)).toBe(0);
+      expect(Directions.opposite(3)).toBe(1);
+    });
+  });
 });
