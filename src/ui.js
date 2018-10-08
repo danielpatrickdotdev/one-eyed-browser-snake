@@ -189,6 +189,11 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
   function init() {
     gameDiv.addEventListener("click", pauseHandler);
     gameDiv.classList.remove("game-over");
+    if (hardBorder) {
+      gameDiv.classList.remove("no-boundary");
+    } else {
+      gameDiv.classList.add("no-boundary");
+    }
     gameDiv.innerHTML = "";
     drawBorder();
   }
