@@ -170,7 +170,7 @@ describe("createUI", function() {
         jest.runTimersToTime(999);
         expect(newGameLink).toBeNull();
 
-        jest.runTimersToTime(1000);
+        jest.runTimersToTime(1);
         newGameLink = document.querySelector(".new-game-link");
 
         expect(newGameLink.outerHTML).toBe(
