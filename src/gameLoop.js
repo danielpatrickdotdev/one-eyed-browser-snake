@@ -5,12 +5,14 @@
  * @param {number} interval - Number of milliseconds between calls to callback.
  */
 function gameLoop(callback, interval=null) {
-  validateInterval();
+  if (interval !== null) {
+    validateInterval(interval);
+  }
   let state = "STOPPED";
   let timerId = null;
 
-  function validateInterval() {
-    if (interval !== null && interval < 10) {
+  function validateInterval(interval) {
+    if (interval < 10) {
       throw new Error(
         "timer interval must be at least 10ms"
       );
@@ -42,6 +44,11 @@ function gameLoop(callback, interval=null) {
    * Start game loop
    */
   function start() {
+    if (state === "STARTED") {
+      throw new Error(
+        "gameLoop.start() called when gameLoop already started"
+      );
+    }
     state = "STARTED";
     _start();
   }
@@ -50,6 +57,11 @@ function gameLoop(callback, interval=null) {
    * Stop game loop
    */
   function stop() {
+    if (state === "STOPPED") {
+      throw new Error(
+        "gameLoop.stop() called when gameLoop already stopped"
+      );
+    }
     state = "STOPPED";
     _stop();
   }
@@ -58,6 +70,15 @@ function gameLoop(callback, interval=null) {
    * Pause game loop
    */
   function pause() {
+    if (state === "STOPPED") {
+      throw new Error(
+        "gameLoop.pause() called when gameLoop is stopped"
+      );
+    } else if (state === "PAUSED") {
+      throw new Error(
+        "gameLoop.pause() called when gameLoop already paused"
+      );
+    }
     state = "PAUSED";
     _stop();
   }
@@ -69,6 +90,7 @@ function gameLoop(callback, interval=null) {
    *                               to callback.
    */
   function setInterval_(newInterval) {
+    validateInterval(newInterval);
     interval = newInterval;
 
     // If started, restart with new interval
