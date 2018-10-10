@@ -1,4 +1,5 @@
-import { createUI, statusCodes } from "./ui.js";
+import { createUI } from "./ui.js";
+import { statusCodes } from "./statusCodes.js";
 import { constructInitialSnake, createSnake } from "./snake.js";
 
 /**
