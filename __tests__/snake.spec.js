@@ -106,6 +106,62 @@ describe("createSnake", function() {
     });
   });
 
+  describe("changeDirection", function() {
+    it("updates nextDirection to given dirNum", function() {
+      const snake = createSnake();
+      snake.changeDirection(1);
+      snake.move();
+
+      expect(snake.getDirection()).toBe(1);
+
+      snake.changeDirection(2);
+      expect(snake.getDirection()).toBe(1);
+
+      snake.move();
+      expect(snake.getDirection()).toBe(2);
+    });
+
+    it("only updates after move", function() {
+      const snake = createSnake();
+      snake.changeDirection(1);
+      expect(snake.getDirection()).toBe(0);
+
+      snake.move();
+      expect(snake.getDirection()).toBe(1);
+
+      snake.changeDirection(2);
+      expect(snake.getDirection()).toBe(1);
+
+      snake.move();
+      expect(snake.getDirection()).toBe(2);
+    });
+
+    it("does not accept opposite of current direction", function() {
+      const snake = createSnake();
+      snake.changeDirection(2);
+      snake.move();
+      expect(snake.getDirection()).toBe(0);
+
+      snake.changeDirection(1);
+      snake.move();
+      snake.changeDirection(3);
+      snake.move();
+      expect(snake.getDirection()).toBe(1);
+
+      snake.changeDirection(2);
+      snake.move();
+      snake.changeDirection(0);
+      snake.move();
+      expect(snake.getDirection()).toBe(2);
+
+      snake.changeDirection(3);
+      snake.move();
+      snake.changeDirection(1);
+      snake.move();
+      expect(snake.getDirection()).toBe(3);
+    });
+  });
+
   describe("move", function() {
     it("changes positions of snake by one unit", function() {
       const snake = createSnake();
