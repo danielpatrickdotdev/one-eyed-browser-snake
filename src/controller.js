@@ -28,17 +28,14 @@ function game() {
     }
 
     // Handle arrow keys
-    if (key === "ArrowUp") {
-      snake.changeDirection(0);
-      e.preventDefault();
-    } else if (key === "ArrowRight") {
-      snake.changeDirection(1);
-      e.preventDefault();
-    } else if (key === "ArrowDown") {
-      snake.changeDirection(2);
-      e.preventDefault();
-    } else if (key === "ArrowLeft") {
-      snake.changeDirection(3);
+    const dirNum = [
+      "ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"
+    ].indexOf(key);
+
+    if (key !== -1) {
+      if(snake.changeDirection(dirNum)) {
+        ui.changeSnakeDirection(dirNum);
+      }
       e.preventDefault();
     }
   });

@@ -1,4 +1,3 @@
-import { Directions } from "./directions.js";
 import { statusCodes } from "./statusCodes.js";
 
 /**
@@ -220,14 +219,22 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
         gameDiv.removeChild(elem);
 
         [col, row,] = positions.slice(-1)[0];
-        const [prevCol, prevRow,] = positions.slice(-2)[0];
-        const dir = Directions.getDirNum([prevCol - col, prevRow - row]);
         const newTailElem = gameDiv.querySelector(`.snake.col-${col}.row-${row}`);
         newTailElem.classList.add("snake-tail");
-        newTailElem.classList.remove("dir-0", "dir-1", "dir-2", "dir-3", "dir-4");
-        newTailElem.classList.add(`dir-${dir}`);
       }
     }
+  }
+
+  /**
+   * Updates snake's head to new orientation
+   *
+   * @param {number} dirNum - Integer representing the snake head's new
+   *                          orientation.
+   */
+  function changeSnakeDirection(dirNum) {
+    const headElem = gameDiv.querySelector(".snake-head");
+    headElem.classList.remove("dir-0", "dir-1", "dir-2", "dir-3");
+    headElem.classList.add(`dir-${dirNum}`);
   }
 
   /**
@@ -270,6 +277,7 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
     setBorder,
     drawSnake,
     updateSnake,
+    changeSnakeDirection,
     drawTarget,
     removeTarget,
     drawScore

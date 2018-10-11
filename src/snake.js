@@ -214,11 +214,16 @@ function createSnake(spec={}) {
    * no impact.
    *
    * @param {dirNum} newDirection
+   * @returns {boolean} - true if direction changed, false if not (i.e. because
+   *                      invalid).
    */
   function changeDirection(newDirection) {
     if (newDirection != oppositeDirection(direction)) {
       nextMoveDirection = newDirection;
+      snakeArray[0][2] = newDirection;
+      return true;
     }
+    return false;
   }
   /**
    * Move snake one space in its current direction.

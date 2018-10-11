@@ -388,6 +388,21 @@ describe("createUI", function() {
     });
   });
 
+  describe("changeSnakeDirection", function() {
+    it("updates snake head dir-N class", function() {
+      const snakeParts = [[9, 8, 0], [9, 9, 0]];
+      const UI = createUI(false, dummyCallback, dummyCallback);
+      UI.drawSnake(snakeParts);
+      UI.changeSnakeDirection(1);
+
+      const snakeHead = document.querySelector("#game div.snake-head");
+      expect(snakeHead.classList.contains("dir-1")).toBe(true);
+
+      const snakeTail = document.querySelector("#game div.snake-tail");
+      expect(snakeTail.classList.contains("dir-0")).toBe(true);
+    });
+  });
+
   describe("drawTarget", function() {
     it("adds target div at position specified", function() {
       const UI = createUI(false, dummyCallback, dummyCallback);

@@ -160,6 +160,16 @@ describe("createSnake", function() {
       snake.move();
       expect(snake.getDirection()).toBe(3);
     });
+
+    it("returns true if change applied", function() {
+      const snake = createSnake();
+      expect(snake.changeDirection(1)).toBe(true);
+    });
+
+    it("returns false if change not applied", function() {
+      const snake = createSnake();
+      expect(snake.changeDirection(2)).toBe(false);
+    });
   });
 
   describe("move", function() {
@@ -175,7 +185,7 @@ describe("createSnake", function() {
       snake.changeDirection(1);
       snake.move();
 
-      expect(snake.getPositions()).toEqual([[10, 9, 1], [9, 9, 0], [9, 10, 0]]);
+      expect(snake.getPositions()).toEqual([[10, 9, 1], [9, 9, 1], [9, 10, 0]]);
     });
 
     it("updates direction if appropriate", function() {
