@@ -6,18 +6,24 @@ import { statusCodes } from "./statusCodes.js";
 
 /**
  * Construct UI controller
- * @param {boolean} hardBorder - Is border solid (true) or permeable (false)?
- * @param {function(ClickEvent)} pauseHandler - This event handler will be
- *                                              called when the user clicks on
- *                                              the game to pause it.
- * @param {function(ClickEvent)} newGameHandler - This event handler will be
- *                                                called when the user clicks
- *                                                a "new game" link.
- * @param {number} [h=20] - Number of rows
- * @param {number} [w=20] - Number of columns
+ * @param {Object} spec - The initial settings for the UI
+ * @param {function(ClickEvent)} spec.pauseHandler - The event handler to be
+ *                                                   called when the user
+ *                                                   clicks on the game to
+ *                                                   pause it.
+ * @param {function(ClickEvent)} spec.newGameHandler - The event handler to be
+ *                                                     called when the user
+ *                                                     clicks a "new game" link.
+ * @param {boolean} [spec.hardBorder=true] - Is border solid (true) or
+ *                                           permeable?
+ * @param {number} [spec.h=20] - Number of rows
+ * @param {number} [spec.w=20] - Number of columns
  * @returns {Object} - Object with methods for controlling UI (eg. drawSnake)
  */
-function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
+function createUI(spec) {
+  const {pauseHandler, newGameHandler} = spec;
+  let {hardBorder=true, h=20, w=20} = spec;
+
   const gameDiv = document.getElementById("game");
   if (!hardBorder) {
     // Game should display differently if the boundary is permeable

@@ -11,15 +11,17 @@ describe("createUI", function() {
   });
 
   function dummyCallback() {}
+  const pauseHandler = dummyCallback;
+  const newGameHandler = dummyCallback;
 
   describe("constructor", function() {
     it("returns a frozen object", function() {
-      const UI = createUI(true, dummyCallback, dummyCallback);
+      const UI = createUI({pauseHandler, newGameHandler});
       expect(Object.isFrozen(UI)).toBe(true);
     });
 
     it("uses default values h=20, w=20", function() {
-      const UI = createUI(true, dummyCallback, dummyCallback);
+      const UI = createUI({pauseHandler, newGameHandler});
       const topBorder = document.querySelectorAll("#game div.top-border");
       const rightBorder = document.querySelectorAll("#game div.right-border");
       const bottomBorder = document.querySelectorAll("#game div.bottom-border");
@@ -33,7 +35,7 @@ describe("createUI", function() {
     });
 
     it("uses passed h & w", function() {
-      const UI = createUI(true, dummyCallback, dummyCallback, 10, 10);
+      const UI = createUI({pauseHandler, newGameHandler, h: 10, w: 10});
       const topBorder = document.querySelectorAll("#game .top-border");
       const rightBorder = document.querySelectorAll("#game .right-border");
       const bottomBorder = document.querySelectorAll("#game .bottom-border");
@@ -46,21 +48,31 @@ describe("createUI", function() {
       expect(leftBorder.length).toBe(12);
     });
 
-    it("uses passed hardBorder", function() {
-      const UI = createUI(true, dummyCallback, dummyCallback, 1, 1);
+    it("uses default hardBorder = true", function() {
+      const UI = createUI({pauseHandler, newGameHandler, h: 1, w: 1});
       const gameDiv = document.getElementById("game");
       expect(gameDiv.classList.contains("no-boundary")).toBe(false);
     });
 
-    it("uses passed hardBorder", function() {
-      const UI = createUI(false, dummyCallback, dummyCallback, 1, 1);
+    it("uses passed hardBorder: true", function() {
+      const UI = createUI({
+        hardBorder: true, pauseHandler, newGameHandler, h: 1, w: 1
+      });
+      const gameDiv = document.getElementById("game");
+      expect(gameDiv.classList.contains("no-boundary")).toBe(false);
+    });
+
+    it("uses passed hardBorder: false", function() {
+      const UI = createUI({
+        hardBorder: false, pauseHandler, newGameHandler, h: 1, w: 1
+      });
       const gameDiv = document.getElementById("game");
       expect(gameDiv.classList.contains("no-boundary")).toBe(true);
     });
 
     it("uses passed pauseHandler", function() {
       const handler = jest.fn();
-      const UI = createUI(false, handler, dummyCallback, 1, 1);
+      const UI = createUI({pauseHandler: handler, newGameHandler});
       const gameDiv = document.getElementById("game");
       expect(handler).not.toHaveBeenCalled();
 
@@ -70,7 +82,7 @@ describe("createUI", function() {
 
     it("uses passed newGameHandler", function() {
       const handler = jest.fn();
-      const UI = createUI(false, dummyCallback, handler, 1, 1);
+      const UI = createUI({pauseHandler, newGameHandler: handler});
       UI.setGameOver();
       jest.runAllTimers(); // advance setTimeout to finish instantly
       const newGameLink = document.querySelector(".new-game-link");
@@ -84,7 +96,7 @@ describe("createUI", function() {
   describe("reset", function() {
     it("tells game to listen to pause event", function() {
       const handler = jest.fn();
-      const UI = createUI(false, handler, dummyCallback, 1, 1);
+      const UI = createUI({pauseHandler: handler, newGameHandler});
       UI.setGameOver(); // should remove pause listener
 
       const gameDiv = document.getElementById("game");
@@ -97,7 +109,7 @@ describe("createUI", function() {
     });
 
     it("removes game-over class from gameDiv", function() {
-      const UI = createUI(false, dummyCallback, dummyCallback, 1, 1);
+      const UI = createUI({pauseHandler, newGameHandler});
       UI.setGameOver(); // should add game-over class to gameDiv
       const gameDiv = document.getElementById("game");
 
@@ -107,7 +119,7 @@ describe("createUI", function() {
     });
 
     it("resets gameDiv innerHTML", function() {
-      const UI = createUI(false, dummyCallback, dummyCallback);
+      const UI = createUI({pauseHandler, newGameHandler});
       const gameDiv = document.getElementById("game");
       const gameDivInnerHTML = gameDiv.innerHTML;
 
@@ -121,22 +133,22 @@ describe("createUI", function() {
     });
 
     it("updates border to hard/soft style if changed before reset", function() {
-      const UI = createUI(false, dummyCallback, dummyCallback);
+      const UI = createUI({pauseHandler, newGameHandler});
       const gameDiv = document.getElementById("game");
-      // Constructor uses first arg - false = no-boundary
-      expect(gameDiv.classList.contains("no-boundary")).toBe(true);
+      // Constructor uses default of true = no-boundary
+      expect(gameDiv.classList.contains("no-boundary")).toBe(false);
 
-      UI.setBorder(true);
+      UI.setBorder(false);
       // Unchanged because we haven't started a new game yet (reset)
-      expect(gameDiv.classList.contains("no-boundary")).toBe(true);
+      expect(gameDiv.classList.contains("no-boundary")).toBe(false);
 
       UI.reset();
       // We started a new game, so border should change now
-      expect(gameDiv.classList.contains("no-boundary")).toBe(false);
+      expect(gameDiv.classList.contains("no-boundary")).toBe(true);
 
       UI.setBorder(true);
       // Unchanged because we haven't started a new game yet (reset)
-      expect(gameDiv.classList.contains("no-boundary")).toBe(false);
+      expect(gameDiv.classList.contains("no-boundary")).toBe(true);
 
       UI.reset();
       // We started a new game, so border should change now
@@ -147,7 +159,7 @@ describe("createUI", function() {
   describe("setGameOver", function() {
     describe("setGameOver without callbacks", function() {
       beforeEach(function() {
-        const UI = createUI(false, dummyCallback, dummyCallback);
+        const UI = createUI({pauseHandler, newGameHandler});
         UI.setGameOver();
       });
 
@@ -188,7 +200,7 @@ describe("createUI", function() {
 
     it("makes new game link listen for newGameHandler", function() {
       const handler = jest.fn();
-      const UI = createUI(false, dummyCallback, handler);
+      const UI = createUI({pauseHandler, newGameHandler: handler});
       UI.setGameOver();
 
       jest.runTimersToTime(1000);
@@ -202,7 +214,7 @@ describe("createUI", function() {
     it("stops game listening for pause event", function() {
       const gameDiv = document.getElementById("game");
       const handler = jest.fn();
-      const UI = createUI(false, handler, dummyCallback);
+      const UI = createUI({pauseHandler: handler, newGameHandler});
       gameDiv.click();
       // Works as expected before setGameOver()
       expect(handler).toHaveBeenCalled();
@@ -217,7 +229,7 @@ describe("createUI", function() {
 
   describe("setPaused", function() {
     beforeEach(function() {
-      const UI = createUI(false, dummyCallback, dummyCallback);
+      const UI = createUI({pauseHandler, newGameHandler});
       UI.setPaused();
     });
 
@@ -242,7 +254,7 @@ describe("createUI", function() {
 
   describe("unsetPaused", function() {
     beforeEach(function() {
-      const UI = createUI(false, dummyCallback, dummyCallback);
+      const UI = createUI({pauseHandler, newGameHandler});
       UI.setPaused();
       UI.unsetPaused();
     });
@@ -261,7 +273,7 @@ describe("createUI", function() {
   describe("setBorder", function() {
     it("setBorder(false) changes border after reset", function() {
       const gameDiv = document.getElementById("game");
-      const UI = createUI(true, dummyCallback, dummyCallback);
+      const UI = createUI({hardBorder: true, pauseHandler, newGameHandler});
       expect(gameDiv.classList.contains("no-boundary")).toBe(false);
 
       UI.setBorder(false);
@@ -273,7 +285,7 @@ describe("createUI", function() {
 
     it("setBorder(true) removes no-boundary class from gameDiv", function() {
       const gameDiv = document.getElementById("game");
-      const UI = createUI(false, dummyCallback, dummyCallback);
+      const UI = createUI({hardBorder: false, pauseHandler, newGameHandler});
       expect(gameDiv.classList.contains("no-boundary")).toBe(true);
 
       UI.setBorder(true);
@@ -287,7 +299,7 @@ describe("createUI", function() {
   describe("drawSnake", function() {
     it("draws snake array with expected html classes", function() {
       const snakeParts = [[8, 10, 1], [8, 9, 2], [9, 9, 3]];
-      const UI = createUI(false, dummyCallback, dummyCallback);
+      const UI = createUI({pauseHandler, newGameHandler});
       UI.drawSnake(snakeParts);
 
       const snakeElems = document.querySelectorAll("#game div.snake");
@@ -313,7 +325,7 @@ describe("createUI", function() {
   describe("updateSnake", function() {
     it("redraws snake array with expected html classes", function() {
       let snakeParts = [[8, 10, 1], [8, 9, 2], [9, 9, 3]];
-      const UI = createUI(false, dummyCallback, dummyCallback);
+      const UI = createUI({pauseHandler, newGameHandler});
       UI.drawSnake(snakeParts);
 
       const firstSnakeHead = document.querySelector("#game div.snake");
@@ -346,7 +358,7 @@ describe("createUI", function() {
     describe("testing growing snake", function() {
       it("snake grows if no removed passed", function() {
         const snakeParts = [[8, 9, 2], [9, 9, 3]];
-        const UI = createUI(false, dummyCallback, dummyCallback);
+        const UI = createUI({pauseHandler, newGameHandler});
         UI.drawSnake(snakeParts);
 
         const firstSnake = document.querySelectorAll("#game div.snake");
@@ -361,7 +373,7 @@ describe("createUI", function() {
 
       beforeEach(function() {
         const snakeParts = [[8, 9, 2], [9, 9, 3]];
-        const UI = createUI(false, dummyCallback, dummyCallback);
+        const UI = createUI({pauseHandler, newGameHandler});
         UI.drawSnake(snakeParts);
 
         snakeParts.unshift([8, 10, 1]);
@@ -398,7 +410,7 @@ describe("createUI", function() {
   describe("changeSnakeDirection", function() {
     it("updates snake head dir-N class", function() {
       const snakeParts = [[9, 8, 0], [9, 9, 0]];
-      const UI = createUI(false, dummyCallback, dummyCallback);
+      const UI = createUI({pauseHandler, newGameHandler});
       UI.drawSnake(snakeParts);
       UI.changeSnakeDirection(1);
 
@@ -412,7 +424,7 @@ describe("createUI", function() {
 
   describe("drawTarget", function() {
     it("adds target div at position specified", function() {
-      const UI = createUI(false, dummyCallback, dummyCallback);
+      const UI = createUI({pauseHandler, newGameHandler});
       UI.drawTarget([1, 2]);
       const target = document.querySelector("#game .target");
 
@@ -423,7 +435,7 @@ describe("createUI", function() {
 
   describe("removeTarget", function() {
     it("adds target div at position specified", function() {
-      const UI = createUI(false, dummyCallback, dummyCallback);
+      const UI = createUI({pauseHandler, newGameHandler});
       UI.drawTarget([1, 2]);
       UI.removeTarget();
 
@@ -435,7 +447,7 @@ describe("createUI", function() {
     it("adds target div at position specified", function() {
       const scoreDiv = document.getElementById("score");
       const msgDiv = document.getElementById("status-message");
-      const UI = createUI(false, dummyCallback, dummyCallback);
+      const UI = createUI({pauseHandler, newGameHandler});
 
       UI.drawScore(62);
       expect(scoreDiv.innerHTML).toBe("100");

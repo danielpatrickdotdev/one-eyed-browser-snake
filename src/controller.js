@@ -8,7 +8,7 @@ import { gameLoop } from "./gameLoop.js";
 function game() {
   let hardBorder = true;
   const snake = createSnake({hardBorder});
-  const ui = createUI(hardBorder, pauseHandler, newGameHandler);
+  const ui = createUI({hardBorder, pauseHandler, newGameHandler});
 
   const target = [-1, -1]; // Initialise with dummy values
   let speed, score, extend; // Assign initial values via init()
