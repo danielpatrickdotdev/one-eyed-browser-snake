@@ -2,6 +2,10 @@ import { createSnake } from "../src/snake.js";
 
 describe("createSnake", function() {
   describe("constructor", function() {
+    it("returns a frozen object", function() {
+      const snake = createSnake();
+      expect(Object.isFrozen(snake)).toBe(true);
+    });
 
     it("uses default values d=0, c=9, r=9 & n=3", function() {
       const snake = createSnake();

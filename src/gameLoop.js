@@ -121,7 +121,7 @@ function gameLoop(callback, interval=null) {
     return state === "PAUSED";
   }
 
-  return {
+  return Object.freeze({
     start,
     stop,
     pause,
@@ -129,7 +129,7 @@ function gameLoop(callback, interval=null) {
     isStopped,
     isPaused,
     setInterval: setInterval_
-  }
+  });
 }
 
 export { gameLoop };

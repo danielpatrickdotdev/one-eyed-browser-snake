@@ -1,6 +1,10 @@
 import { Directions } from "../src/directions.js";
 
 describe("Directions", function() {
+  it("is a frozen object", function() {
+    expect(Object.isFrozen(Directions)).toBe(true);
+  });
+
   describe("get", function() {
     it("converts int to appropriate cartesian", function() {
       expect(Directions.get(0)).toEqual([0, -1]);

@@ -13,6 +13,10 @@ describe("createUI", function() {
   function dummyCallback() {}
 
   describe("constructor", function() {
+    it("returns a frozen object", function() {
+      const UI = createUI(true, dummyCallback, dummyCallback);
+      expect(Object.isFrozen(UI)).toBe(true);
+    });
 
     it("uses default values h=20, w=20", function() {
       const UI = createUI(true, dummyCallback, dummyCallback);

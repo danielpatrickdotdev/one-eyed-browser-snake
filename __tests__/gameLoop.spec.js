@@ -8,6 +8,11 @@ const defaultInterval = 100;
 
 describe("gameLoop", function() {
   describe("constructor", function() {
+    it("returns a frozen object", function() {
+      const loop = gameLoop(jest.fn(), defaultInterval);
+      expect(Object.isFrozen(loop)).toBe(true);
+    });
+
     it("initialises in stopped state", function() {
       const loop = gameLoop(jest.fn(), defaultInterval);
       expect(loop.isStopped()).toBe(true);

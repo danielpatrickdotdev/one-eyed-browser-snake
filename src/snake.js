@@ -158,14 +158,14 @@ function createSnake(spec={}) {
   // Set some initial values and construct initial snake
   init();
 
-  return {
+  return Object.freeze({
     reset: init,
     setBorder,
     move,
     getDirection,
     changeDirection,
     getPositions
-  };
+  });
 }
 
 export { createSnake };

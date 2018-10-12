@@ -269,7 +269,7 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
     statusDiv.innerHTML = `${message}`;
   }
 
-  return {
+  return Object.freeze({
     reset: init,
     setGameOver,
     setPaused,
@@ -281,7 +281,7 @@ function createUI(hardBorder, pauseHandler, newGameHandler, h=20, w=20) {
     drawTarget,
     removeTarget,
     drawScore
-  }
+  });
 }
 
 export { createUI, statusCodes };
