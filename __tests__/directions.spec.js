@@ -17,6 +17,13 @@ describe("Directions", function() {
       expect(Directions.getDirNum([0, 1])).toBe(2);
       expect(Directions.getDirNum([-1, 0])).toBe(3);
     });
+
+    it("converts direction object to appropriate int", function() {
+      expect(Directions.getDirNum(Directions.UP)).toBe(0);
+      expect(Directions.getDirNum(Directions.RIGHT)).toBe(1);
+      expect(Directions.getDirNum(Directions.DOWN)).toBe(2);
+      expect(Directions.getDirNum(Directions.LEFT)).toBe(3);
+    });
   });
 
   describe("opposite", function() {
