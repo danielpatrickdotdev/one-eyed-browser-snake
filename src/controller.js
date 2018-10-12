@@ -1,6 +1,6 @@
 import { createUI } from "./ui.js";
 import { statusCodes } from "./statusCodes.js";
-import { constructInitialSnake, createSnake } from "./snake.js";
+import { createSnake } from "./snake.js";
 import { gameLoop } from "./gameLoop.js";
 
 
@@ -262,29 +262,7 @@ function game() {
   // Set initial variables
   init();
 
-  // Read score from DOM
-  score = getScoreFromHTML();
-
-  if (score === 0) {
-    // No score set in DOM, or score was set to zero, so we
-    // start playing immediately.
-    play();
-  } else {
-    // If score was set in DOM, we start in gameover state
-
-    // Create dummy snake to display
-    const snakePositions = constructInitialSnake(score + 3);
-    // Place target next to head of snake
-    const targetPos = [0, 19].includes(snakePositions[0][0]) ?
-                      [snakePositions[0][0], snakePositions[2][1]] :
-                      [snakePositions[2][0], snakePositions[0][1]];
-
-    // Draw game pieces and show gameover overlay
-    ui.drawSnake(snakePositions);
-    ui.drawTarget(targetPos);
-    ui.drawScore(score);
-    ui.setGameOver();
-  }
+  play();
 }
 
 export { game };
