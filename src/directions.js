@@ -49,19 +49,8 @@ const Directions = (function() {
    * @param {dirNum} dirNum
    */
   function getDirNum(dir) {
-    const [c, r] = dir;
-
-    // We can't compare Arrays so this ugliness will do for now
-    if (c === 0 && r === -1) {
-      return 0;
-    } else if (c === 1 && r === 0) {
-      return 1;
-    } else if (c === 0 && r === 1) {
-      return 2;
-    } else if (c === -1 && r === 0) {
-      return 3;
-    }
-    throw new Error("Invalid direction: " + dir);
+    const [dx, dy] = dir;
+    return Math.abs(dx) - dx + dy + 1;
   }
   /**
    * Returns the direction (UP, RIGHT, DOWN or LEFT) of the given dirNum
