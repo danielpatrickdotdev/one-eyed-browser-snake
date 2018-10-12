@@ -107,7 +107,6 @@ function game() {
    */
   function processTargetCollision() {
     ui.removeTarget();
-    extend = true;
     score++;
     if (score % 2 === 0) {
       incrementSpeed();
@@ -151,6 +150,7 @@ function game() {
       ui.setGameOver();
     } else {
       if (positionsEqual(snake.getPositions()[0], target)) {
+        extend = true;
         processTargetCollision();
       }
       ui.updateSnake(snake.getPositions(), toRemove);
