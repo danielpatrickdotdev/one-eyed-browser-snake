@@ -62,9 +62,8 @@ function createSnake(spec={}) {
    * @param {dirNum} dirNum - direction to move in
    */
   function translate(x, y, dirNum) {
-    const [dx, dy] = Directions.get(dirNum);
-    x += dx;
-    y += dy;
+    [x, y] = Directions.translate(x, y, dirNum);
+
     if (!hardBorder) {
       x = (x + ncols) % ncols;
       y = (y + nrows) % nrows;

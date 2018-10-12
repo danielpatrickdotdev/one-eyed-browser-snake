@@ -43,6 +43,21 @@ const Directions = (function() {
   function opposite(dirNum) {
     return (dirNum + 2) % 4;
   }
+
+  /**
+   * Calculates and returns new x and y coordinates one unit away from given
+   * x and y in the direction of dirNum.
+   * @param {number} x - starting horizontal coordinate
+   * @param {number} y - starting vertical coordinate
+   * @param {dirNum} dirNum - direction to move in
+   */
+  function translate(x, y, dirNum) {
+    const [dx, dy] = get(dirNum);
+    x += dx;
+    y += dy;
+    return [x, y];
+  }
+
   /**
    * Returns the dirNum given one of UP, RIGHT, DOWN or LEFT
    * @param {dirNum} dirNum
@@ -76,6 +91,7 @@ const Directions = (function() {
     next,
     prev,
     opposite,
+    translate,
     getDirNum
   });
 })();
