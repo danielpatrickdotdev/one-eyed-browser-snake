@@ -1,8 +1,8 @@
 import { createUI } from "../src/ui.js";
 
-describe("createUI", function() {
-  jest.useFakeTimers();
+jest.useFakeTimers();
 
+describe("createUI", function() {
   beforeEach(function() {
     document.body.innerHTML = `
       <div id="score"></div>
@@ -12,66 +12,69 @@ describe("createUI", function() {
 
   function dummyCallback() {}
 
-  it("constructor uses default values h=20, w=20", function() {
-    const UI = createUI(true, dummyCallback, dummyCallback);
-    const topBorder = document.querySelectorAll("#game div.top-border");
-    const rightBorder = document.querySelectorAll("#game div.right-border");
-    const bottomBorder = document.querySelectorAll("#game div.bottom-border");
-    const leftBorder = document.querySelectorAll("#game div.left-border");
+  describe("constructor", function() {
 
-    // NodeList.length should equal 22 (20 + one extra either end)
-    expect(topBorder.length).toBe(22);
-    expect(rightBorder.length).toBe(22);
-    expect(bottomBorder.length).toBe(22);
-    expect(leftBorder.length).toBe(22);
-  });
+    it("uses default values h=20, w=20", function() {
+      const UI = createUI(true, dummyCallback, dummyCallback);
+      const topBorder = document.querySelectorAll("#game div.top-border");
+      const rightBorder = document.querySelectorAll("#game div.right-border");
+      const bottomBorder = document.querySelectorAll("#game div.bottom-border");
+      const leftBorder = document.querySelectorAll("#game div.left-border");
 
-  it("constructor uses passed h & w", function() {
-    const UI = createUI(true, dummyCallback, dummyCallback, 10, 10);
-    const topBorder = document.querySelectorAll("#game .top-border");
-    const rightBorder = document.querySelectorAll("#game .right-border");
-    const bottomBorder = document.querySelectorAll("#game .bottom-border");
-    const leftBorder = document.querySelectorAll("#game .left-border");
+      // NodeList.length should equal 22 (20 + one extra either end)
+      expect(topBorder.length).toBe(22);
+      expect(rightBorder.length).toBe(22);
+      expect(bottomBorder.length).toBe(22);
+      expect(leftBorder.length).toBe(22);
+    });
 
-    // NodeList.length should equal 12 (10 + one extra either end)
-    expect(topBorder.length).toBe(12);
-    expect(rightBorder.length).toBe(12);
-    expect(bottomBorder.length).toBe(12);
-    expect(leftBorder.length).toBe(12);
-  });
+    it("uses passed h & w", function() {
+      const UI = createUI(true, dummyCallback, dummyCallback, 10, 10);
+      const topBorder = document.querySelectorAll("#game .top-border");
+      const rightBorder = document.querySelectorAll("#game .right-border");
+      const bottomBorder = document.querySelectorAll("#game .bottom-border");
+      const leftBorder = document.querySelectorAll("#game .left-border");
 
-  it("constructor uses passed hardBorder", function() {
-    const UI = createUI(true, dummyCallback, dummyCallback, 1, 1);
-    const gameDiv = document.getElementById("game");
-    expect(gameDiv.classList.contains("no-boundary")).toBe(false);
-  });
+      // NodeList.length should equal 12 (10 + one extra either end)
+      expect(topBorder.length).toBe(12);
+      expect(rightBorder.length).toBe(12);
+      expect(bottomBorder.length).toBe(12);
+      expect(leftBorder.length).toBe(12);
+    });
 
-  it("constructor uses passed hardBorder", function() {
-    const UI = createUI(false, dummyCallback, dummyCallback, 1, 1);
-    const gameDiv = document.getElementById("game");
-    expect(gameDiv.classList.contains("no-boundary")).toBe(true);
-  });
+    it("uses passed hardBorder", function() {
+      const UI = createUI(true, dummyCallback, dummyCallback, 1, 1);
+      const gameDiv = document.getElementById("game");
+      expect(gameDiv.classList.contains("no-boundary")).toBe(false);
+    });
 
-  it("constructor uses passed pauseHandler", function() {
-    const handler = jest.fn();
-    const UI = createUI(false, handler, dummyCallback, 1, 1);
-    const gameDiv = document.getElementById("game");
-    expect(handler).not.toHaveBeenCalled();
+    it("uses passed hardBorder", function() {
+      const UI = createUI(false, dummyCallback, dummyCallback, 1, 1);
+      const gameDiv = document.getElementById("game");
+      expect(gameDiv.classList.contains("no-boundary")).toBe(true);
+    });
 
-    gameDiv.click();
-    expect(handler).toHaveBeenCalled();
-  });
+    it("uses passed pauseHandler", function() {
+      const handler = jest.fn();
+      const UI = createUI(false, handler, dummyCallback, 1, 1);
+      const gameDiv = document.getElementById("game");
+      expect(handler).not.toHaveBeenCalled();
 
-  it("constructor uses passed newGameHandler", function() {
-    const handler = jest.fn();
-    const UI = createUI(false, dummyCallback, handler, 1, 1);
-    UI.setGameOver();
-    jest.runAllTimers(); // advance setTimeout to finish instantly
-    const newGameLink = document.querySelector(".new-game-link");
+      gameDiv.click();
+      expect(handler).toHaveBeenCalled();
+    });
 
-    expect(handler).not.toHaveBeenCalled();
-    newGameLink.click();
-    expect(handler).toHaveBeenCalled();
+    it("uses passed newGameHandler", function() {
+      const handler = jest.fn();
+      const UI = createUI(false, dummyCallback, handler, 1, 1);
+      UI.setGameOver();
+      jest.runAllTimers(); // advance setTimeout to finish instantly
+      const newGameLink = document.querySelector(".new-game-link");
+
+      expect(handler).not.toHaveBeenCalled();
+      newGameLink.click();
+      expect(handler).toHaveBeenCalled();
+    });
   });
 
   describe("reset", function() {

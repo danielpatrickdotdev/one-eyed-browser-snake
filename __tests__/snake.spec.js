@@ -1,65 +1,68 @@
 import { createSnake } from "../src/snake.js";
 
 describe("createSnake", function() {
-  it("constructor uses default values d=0, c=9, r=9 & n=3", function() {
-    const snake = createSnake();
-    expect(snake.getPositions()).toEqual([[9, 9, 0], [9, 10, 0], [9, 11, 0]]);
-  });
+  describe("constructor", function() {
 
-  it("constructor uses passed arguments for d, c, r & n", function() {
-    const snake = createSnake({ d: 1, c: 3, r: 3, n: 2 });
-    expect(snake.getPositions()).toEqual([[3, 3, 1], [2, 3, 1]]);
-  });
+    it("uses default values d=0, c=9, r=9 & n=3", function() {
+      const snake = createSnake();
+      expect(snake.getPositions()).toEqual([[9, 9, 0], [9, 10, 0], [9, 11, 0]]);
+    });
 
-  it("constructor uses default ncols value of 20", function() {
-    const snake = createSnake({ c: 19, n: 1 });
-    snake.changeDirection(1);
-    snake.move();
+    it("uses passed arguments for d, c, r & n", function() {
+      const snake = createSnake({ d: 1, c: 3, r: 3, n: 2 });
+      expect(snake.getPositions()).toEqual([[3, 3, 1], [2, 3, 1]]);
+    });
 
-    // Should wrap around to [0, 9]
-    expect(snake.getPositions()).toEqual([[0, 9, 1]]);
-  });
+    it("uses default ncols value of 20", function() {
+      const snake = createSnake({ c: 19, n: 1 });
+      snake.changeDirection(1);
+      snake.move();
 
-  it("constructor uses passed argument for ncols", function() {
-    const snake = createSnake({ ncols: 10, n: 1 });
-    snake.changeDirection(1);
-    snake.move()
+      // Should wrap around to [0, 9]
+      expect(snake.getPositions()).toEqual([[0, 9, 1]]);
+    });
 
-    // Should wrap around to [0, 9]
-    expect(snake.getPositions()).toEqual([[0, 9, 1]]);
-  });
+    it("uses passed argument for ncols", function() {
+      const snake = createSnake({ ncols: 10, n: 1 });
+      snake.changeDirection(1);
+      snake.move()
 
-  it("constructor uses default nrows value of 20", function() {
-    const snake = createSnake({ r: 0, n: 1 });
-    snake.move();
+      // Should wrap around to [0, 9]
+      expect(snake.getPositions()).toEqual([[0, 9, 1]]);
+    });
 
-    // Should wrap around to [9, 19]
-    expect(snake.getPositions()).toEqual([[9, 19, 0]]);
-  });
+    it("uses default nrows value of 20", function() {
+      const snake = createSnake({ r: 0, n: 1 });
+      snake.move();
 
-  it("constructor uses passed argument for nrows", function() {
-    const snake = createSnake({ r: 0, nrows: 10, n: 1 });
-    snake.move();
+      // Should wrap around to [9, 19]
+      expect(snake.getPositions()).toEqual([[9, 19, 0]]);
+    });
 
-    // Should wrap around to [9, 9]
-    expect(snake.getPositions()).toEqual([[9, 9, 0]]);
-  });
+    it("uses passed argument for nrows", function() {
+      const snake = createSnake({ r: 0, nrows: 10, n: 1 });
+      snake.move();
 
-  it("constructor uses default hardBorder value of false", function() {
-    const snake = createSnake({ r: 0, n: 1 }); // starting pos: [9, 0]
-    snake.move();
+      // Should wrap around to [9, 9]
+      expect(snake.getPositions()).toEqual([[9, 9, 0]]);
+    });
 
-    // hardBorder = false so should wrap around to [9, 19]
-    expect(snake.getPositions()).toEqual([[9, 19, 0]]);
-  });
+    it("uses default hardBorder value of false", function() {
+      const snake = createSnake({ r: 0, n: 1 }); // starting pos: [9, 0]
+      snake.move();
 
-  it("constructor uses passed argument for hardBorder", function() {
-    const snake = createSnake({ r: 0, n: 1, hardBorder: true });
-    // starting pos: [9, 0]
-    snake.move();
+      // hardBorder = false so should wrap around to [9, 19]
+      expect(snake.getPositions()).toEqual([[9, 19, 0]]);
+    });
 
-    // hardBorder = true so should not wrap around
-    expect(snake.getPositions()).toEqual([[9, -1, 0]]);
+    it("uses passed argument for hardBorder", function() {
+      const snake = createSnake({ r: 0, n: 1, hardBorder: true });
+      // starting pos: [9, 0]
+      snake.move();
+
+      // hardBorder = true so should not wrap around
+      expect(snake.getPositions()).toEqual([[9, -1, 0]]);
+    });
   });
 
   describe("reset", function() {
