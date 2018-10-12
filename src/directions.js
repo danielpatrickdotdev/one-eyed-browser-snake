@@ -56,8 +56,8 @@ const Directions = (function() {
    * Returns the direction (UP, RIGHT, DOWN or LEFT) of the given dirNum
    * @param {dirNum} dirNum
    */
-  function get(n) {
-    return directions[n].slice();
+  function get(dirNum) {
+    return directions[dirNum].slice();
   }
 
   return Object.freeze({
