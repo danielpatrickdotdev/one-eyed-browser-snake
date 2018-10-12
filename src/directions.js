@@ -23,20 +23,6 @@ const Directions = (function() {
   const directions = [UP, RIGHT, DOWN, LEFT];
 
   /**
-   * Returns the dirNum of the given dirNum rotated 90 degrees to the right.
-   * @param {dirNum} dirNum
-   */
-  function next(dirNum) {
-    return (dirNum + 1) % 4;
-  }
-  /**
-   * Returns the dirNum of the direction to the left of given dirNum
-   * @param {dirNum} dirNum
-   */
-  function prev(dirNum) {
-    return (dirNum + 3) % 4;
-  }
-  /**
    * Returns the dirNum of the direction opposite the given dirNum
    * @param {dirNum} dirNum
    */
@@ -88,8 +74,6 @@ const Directions = (function() {
   return Object.freeze({
     UP, RIGHT, DOWN, LEFT,
     get,
-    next,
-    prev,
     opposite,
     translate,
     getDirNum
